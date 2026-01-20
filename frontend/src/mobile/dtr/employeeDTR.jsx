@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import BASE_URL from "../../../backend/server/config";
+import {
+  Calendar as CalendarIcon,
+  Search,
+  Filter,
+  RefreshCw,
+  Download,
+  Clock,
+  AlertCircle,
+  CheckCircle2,
+  XCircle,
+  MoreHorizontal,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { format, parseISO, isValid } from "date-fns";
 
 const EmployeeDTR = ({ employeeId }) => {
   const [attendanceData, setAttendanceData] = useState([]);
@@ -15,14 +29,13 @@ const EmployeeDTR = ({ employeeId }) => {
 
       if (data.success) {
         let employeeAttendance = data.data.filter(
-          (item) => item.employee_id === employeeId
+          (item) => item.employee_id === employeeId,
         );
 
         const today = new Date();
-        today.setHours(23, 59, 59, 999); // end of today
+        today.setHours(23, 59, 59, 999);
 
         if (range.start && range.end) {
-          // ✅ Use user-defined range
           const start = new Date(range.start);
           const end = new Date(range.end);
           employeeAttendance = employeeAttendance.filter((item) => {
@@ -30,189 +43,310 @@ const EmployeeDTR = ({ employeeId }) => {
             return recordDate >= start && recordDate <= end;
           });
         } else {
-          // ✅ Default filter: show records only up to today
+          // Default: Last 30 days if no range selected (Cleaner initial view)
           employeeAttendance = employeeAttendance.filter((item) => {
             const recordDate = new Date(item.attendance_date);
             return recordDate <= today;
           });
         }
 
-        // Sort from newest → oldest
+        // Sort: Newest first
         employeeAttendance.sort(
-          (a, b) => new Date(b.attendance_date) - new Date(a.attendance_date)
+          (a, b) => new Date(b.attendance_date) - new Date(a.attendance_date),
         );
 
         setAttendanceData(employeeAttendance);
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Oops!",
-          text: data.message || "Failed to fetch attendance records",
-        });
+        // Silent fail or toast in production
+        console.error("Failed to fetch data");
       }
     } catch (error) {
-      console.error("Error fetching attendance:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "An error occurred while fetching attendance data.",
-      });
+      console.error("API Error", error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (!employeeId) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Employee data is missing. Please contact admin.",
-      });
-    } else {
-      fetchAttendance();
-    }
+    if (employeeId) fetchAttendance();
   }, [employeeId]);
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const monthNames = [
-      "Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.",
-      "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."
-    ];
-    return `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+  // Helper to format time cleanly (e.g. 08:30 AM)
+  const formatTime = (timeString) => {
+    if (!timeString || timeString === "00:00:00") return null;
+    const [hours, minutes] = timeString.split(":");
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    return format(date, "h:mm a");
   };
 
-  const formatTime12h = (timeString) => {
-    if (!timeString || timeString === "00:00:00") return "--:--";
-    const [hourStr, minuteStr] = timeString.split(":");
-    let hour = parseInt(hourStr, 10);
-    const minute = minuteStr;
-    const ampm = hour >= 12 ? "PM" : "AM";
-    hour = hour % 12 || 12;
-    return `${hour}:${minute} ${ampm}`;
+  // Determine status for badge
+  const getStatus = (record) => {
+    if (record.days_credited > 0) return "complete";
+    if (!record.time_in_morning && !record.time_in_afternoon) return "absent";
+    return "incomplete";
   };
 
-  const openDateRangePopup = async () => {
+  const handleDateFilter = async () => {
     const { value: formValues } = await Swal.fire({
-      title: "Select Date Range",
+      title: "Filter Records",
       html: `
-        <div class="flex flex-col gap-4 w-full">
-          <div class="flex flex-col text-left">
-            <label for="swal-input1" class="text-sm font-medium text-gray-700 mb-1">From</label>
-            <input 
-              id="swal-input1" 
-              type="date" 
-              class="px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none transition text-sm w-full" 
-            />
-          </div>
-          <div class="flex flex-col text-left">
-            <label for="swal-input2" class="text-sm font-medium text-gray-700 mb-1">To</label>
-            <input 
-              id="swal-input2" 
-              type="date" 
-              class="px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none transition text-sm w-full" 
-            />
-          </div>
+        <div class="flex flex-col gap-3 text-left">
+          <label class="text-sm font-semibold text-gray-600">Start Date</label>
+          <input id="start-date" class="swal2-input m-0 w-full text-sm" type="date">
+          <label class="text-sm font-semibold text-gray-600 mt-2">End Date</label>
+          <input id="end-date" class="swal2-input m-0 w-full text-sm" type="date">
         </div>
       `,
-      background: "#ffffff",
-      width: "22rem",
-      padding: "1.5rem",
-      confirmButtonText: "Search",
-      cancelButtonText: "Cancel",
+      focusConfirm: false,
+      confirmButtonColor: "#2563EB",
       showCancelButton: true,
-      buttonsStyling: false,
-      customClass: {
-        popup: "rounded-2xl shadow-lg",
-        title: "text-lg font-semibold text-gray-800 mb-2",
-        confirmButton:
-          "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium mx-2 transition",
-        cancelButton:
-          "bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg font-medium mx-2 transition",
-      },
       preConfirm: () => {
-        const start = document.getElementById("swal-input1").value;
-        const end = document.getElementById("swal-input2").value;
-        if (!start || !end) {
-          Swal.showValidationMessage("Both start and end dates are required");
-        }
-        return { start, end };
+        return {
+          start: document.getElementById("start-date").value,
+          end: document.getElementById("end-date").value,
+        };
       },
     });
 
-    if (formValues) {
+    if (formValues && formValues.start && formValues.end) {
       setDateRange(formValues);
       fetchAttendance(formValues);
     }
   };
 
-  const clearDateRange = () => {
+  const handleReset = () => {
     setDateRange({ start: "", end: "" });
     fetchAttendance({ start: "", end: "" });
   };
 
   return (
-    <div className="flex flex-col w-full h-full p-3 pb-16 rounded-lg shadow-md sm:p-5 bg-gray-50">
-      <div className="flex flex-col items-center justify-between gap-3 mb-4 sm:flex-row">
-        <h2 className="text-base font-semibold text-gray-700 sm:text-lg">
-          Employee Daily Time Records
-        </h2>
-        <div className="flex gap-2">
+    <div className="flex flex-col h-full bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden font-sans">
+      {/* --- Toolbar --- */}
+      <div className="flex flex-col sm:flex-row justify-between items-center p-5 border-b border-gray-100 bg-white">
+        <div className="flex items-center gap-3 mb-4 sm:mb-0">
+          <div className="p-2.5 bg-blue-50 text-blue-600 rounded-lg">
+            <CalendarIcon size={20} />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-gray-800">Attendance Log</h2>
+            <p className="text-xs text-gray-500 font-medium">
+              {dateRange.start
+                ? `${format(parseISO(dateRange.start), "MMM d, yyyy")} - ${format(parseISO(dateRange.end), "MMM d, yyyy")}`
+                : "All Records"}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
           <button
-            onClick={openDateRangePopup}
-            className="px-4 py-2 text-sm font-medium text-white transition bg-blue-500 rounded-md hover:bg-blue-600"
+            onClick={fetchAttendance}
+            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            title="Refresh"
           >
-            Search by Date Range
+            <RefreshCw size={18} />
           </button>
-          {dateRange.start && dateRange.end && (
+
+          <div className="h-6 w-px bg-gray-200 mx-1"></div>
+
+          <button
+            onClick={handleDateFilter}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 rounded-lg transition-all shadow-sm"
+          >
+            <Filter size={16} />
+            Filter
+          </button>
+
+          {dateRange.start && (
             <button
-              onClick={clearDateRange}
-              className="px-3 py-2 text-sm font-medium text-gray-700 transition bg-gray-200 rounded-md hover:bg-gray-300"
+              onClick={handleReset}
+              className="text-sm font-medium text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors"
             >
-              🗑 Clear Range
+              Reset
             </button>
           )}
         </div>
       </div>
 
-      {loading ? (
-        <p className="text-center text-gray-600">Loading...</p>
-      ) : attendanceData.length === 0 ? (
-        <p className="text-center text-gray-500">No attendance records found.</p>
-      ) : (
-        <div className="flex flex-col gap-3">
-          {attendanceData.map((record) => (
-            <div
-              key={record.attendance_id}
-              className="flex flex-col p-3 transition bg-white rounded-lg shadow-sm sm:p-4 hover:shadow-md"
-            >
-              <div className="pb-1 mb-2 text-sm font-semibold text-gray-700 border-b sm:text-base">
-                {formatDate(record.attendance_date)}
-              </div>
-              <div className="grid grid-cols-1 gap-3 text-xs text-gray-600 sm:grid-cols-3 sm:text-sm">
-                <div className="flex flex-col">
-                  <span className="font-medium text-gray-700">Morning</span>
-                  <span>
-                    {formatTime12h(record.time_in_morning)} -{" "}
-                    {formatTime12h(record.time_out_morning)}
-                  </span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-medium text-gray-700">Afternoon</span>
-                  <span>
-                    {formatTime12h(record.time_in_afternoon)} -{" "}
-                    {formatTime12h(record.time_out_afternoon)}
-                  </span>
-                </div>
-                <div className="flex items-center justify-start font-medium text-gray-700 sm:justify-center">
-                  Credited: {record.days_credited || "--"}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      {/* --- Data Table --- */}
+      <div className="overflow-x-auto grow bg-gray-50/30">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="border-b border-gray-200 bg-gray-50/50">
+              <th className="py-4 px-6 text-xs font-bold uppercase text-gray-500 tracking-wider w-[20%]">
+                Date
+              </th>
+              <th className="py-4 px-6 text-xs font-bold uppercase text-gray-500 tracking-wider w-[20%]">
+                Morning Shift
+              </th>
+              <th className="py-4 px-6 text-xs font-bold uppercase text-gray-500 tracking-wider w-[20%]">
+                Afternoon Shift
+              </th>
+              <th className="py-4 px-6 text-xs font-bold uppercase text-gray-500 tracking-wider w-[15%] text-center">
+                Credit
+              </th>
+              <th className="py-4 px-6 text-xs font-bold uppercase text-gray-500 tracking-wider w-[15%] text-right">
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100 bg-white">
+            {loading ? (
+              [...Array(5)].map((_, i) => (
+                <tr key={i} className="animate-pulse">
+                  <td className="py-4 px-6">
+                    <div className="h-4 bg-gray-200 rounded w-24"></div>
+                  </td>
+                  <td className="py-4 px-6">
+                    <div className="h-4 bg-gray-200 rounded w-32"></div>
+                  </td>
+                  <td className="py-4 px-6">
+                    <div className="h-4 bg-gray-200 rounded w-32"></div>
+                  </td>
+                  <td className="py-4 px-6">
+                    <div className="h-4 bg-gray-200 rounded w-8 mx-auto"></div>
+                  </td>
+                  <td className="py-4 px-6">
+                    <div className="h-6 bg-gray-200 rounded-full w-20 ml-auto"></div>
+                  </td>
+                </tr>
+              ))
+            ) : attendanceData.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="py-20 text-center">
+                  <div className="flex flex-col items-center justify-center text-gray-400">
+                    <div className="p-4 bg-gray-50 rounded-full mb-3">
+                      <Search size={32} className="opacity-50" />
+                    </div>
+                    <span className="text-sm font-medium">
+                      No records found
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              attendanceData.map((record, index) => {
+                const status = getStatus(record);
+                const dateObj = parseISO(record.attendance_date);
+
+                return (
+                  <motion.tr
+                    key={record.attendance_id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: index * 0.03 }}
+                    className="hover:bg-blue-50/30 transition-colors group cursor-default"
+                  >
+                    {/* Date Column */}
+                    <td className="py-4 px-6">
+                      <div className="flex flex-col">
+                        <span className="font-bold text-gray-800 text-sm">
+                          {isValid(dateObj)
+                            ? format(dateObj, "MMM d, yyyy")
+                            : record.attendance_date}
+                        </span>
+                        <span className="text-xs text-gray-400 font-medium">
+                          {isValid(dateObj) ? format(dateObj, "EEEE") : ""}
+                        </span>
+                      </div>
+                    </td>
+
+                    {/* Morning Column */}
+                    <td className="py-4 px-6">
+                      <TimeCell
+                        inTime={formatTime(record.time_in_morning)}
+                        outTime={formatTime(record.time_out_morning)}
+                      />
+                    </td>
+
+                    {/* Afternoon Column */}
+                    <td className="py-4 px-6">
+                      <TimeCell
+                        inTime={formatTime(record.time_in_afternoon)}
+                        outTime={formatTime(record.time_out_afternoon)}
+                      />
+                    </td>
+
+                    {/* Credit Column */}
+                    <td className="py-4 px-6 text-center">
+                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-50 font-bold text-gray-700 text-sm border border-gray-200">
+                        {record.days_credited || 0}
+                      </div>
+                    </td>
+
+                    {/* Status Column */}
+                    <td className="py-4 px-6 text-right">
+                      <StatusBadge status={status} />
+                    </td>
+                  </motion.tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Footer / Pagination (Static for now) */}
+      <div className="p-4 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex justify-between items-center">
+        <span>Showing {attendanceData.length} records</span>
+        <span>Synced with Server</span>
+      </div>
+    </div>
+  );
+};
+
+// --- Sub Components for cleaner code ---
+
+const TimeCell = ({ inTime, outTime }) => {
+  if (!inTime && !outTime)
+    return <span className="text-xs text-gray-300 italic">No logs</span>;
+
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center gap-2">
+        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+        <span className="text-xs text-gray-500 w-6">IN</span>
+        <span className="text-sm font-mono font-medium text-gray-700">
+          {inTime || "--:--"}
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
+        <div className="w-1.5 h-1.5 rounded-full bg-orange-400"></div>
+        <span className="text-xs text-gray-500 w-6">OUT</span>
+        <span className="text-sm font-mono font-medium text-gray-700">
+          {outTime || "--:--"}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+const StatusBadge = ({ status }) => {
+  const styles = {
+    complete: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    incomplete: "bg-amber-50 text-amber-700 border-amber-200",
+    absent: "bg-red-50 text-red-700 border-red-200",
+  };
+
+  const icons = {
+    complete: <CheckCircle2 size={12} />,
+    incomplete: <AlertCircle size={12} />,
+    absent: <XCircle size={12} />,
+  };
+
+  const labels = {
+    complete: "Complete",
+    incomplete: "Incomplete",
+    absent: "Absent",
+  };
+
+  return (
+    <div
+      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${styles[status] || styles.incomplete} ml-auto`}
+    >
+      {icons[status] || icons.incomplete}
+      {labels[status] || "Unknown"}
     </div>
   );
 };
