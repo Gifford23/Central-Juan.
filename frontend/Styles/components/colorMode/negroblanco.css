@@ -1,0 +1,254 @@
+@import 'tailwindcss';
+
+    body {
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    body {
+        @apply
+        text-white
+    }
+    
+    body {
+        @apply
+        text-black
+    }
+    
+
+/* sidebar */
+
+    /* darkmode */
+     
+    .Glc-sidebar-maincolor, 
+    .nb-sidebar-slicercontribution {
+        @apply
+        bg-[#1E1F1F]
+    }
+
+     .nb-sidebar-navcolor {
+        @apply
+        bg-[#282A2A]
+    }
+
+     .Glc-sidebar-outletcolor {
+        @apply
+        bg-[#282A2A]
+    }
+    
+    /* lightmode */
+     .Glc-sidebar-maincolor {
+        background: 
+            /* linear-gradient(to bottom, #0c1928, #1E1F1F); */
+            linear-gradient(to bottom, 
+            #1b4965 10%, #62b6cb 70%);
+    }
+
+     .nb-sidebar-topimage {
+        @apply
+        bg-gray-900
+        px-3 
+        rounded-2xl
+    }
+
+     .Glc-sidebar-maincolor {
+        @apply
+        /* bg-[#F5F5F5] */
+        bg-[#0c1928];
+    }
+
+     .Glc-sidebar-selectedhovercolor {
+        @apply
+        /* bg-[#3c4652]/50 */
+        /* bg-[#0088f0]/30 */
+        bg-[#62b6cb]/50
+    }
+
+     .nb-sidebar-navcolor {
+        @apply
+        bg-[#f7fafc]
+    }
+
+     .nb-sidebar-textcolor {
+        @apply
+        text-black
+    }
+
+     .Glc-sidebar-outletcolor {
+        @apply
+        bg-[#f7fafc]    
+    }
+
+     .nb-sidebar-slicercontribution {
+        @apply
+        bg-gray-200
+    }
+
+/* breadcrumbs */
+
+    /* darkmode */
+     .nb-breadcrumbs-srcpath {
+        @apply
+        text-white/50
+    }
+
+     .nb-breadcrumbs-srcpath:hover {
+        @apply
+        text-white
+    }
+
+     .nb-breadcrumbs-crntpath {
+        @apply
+        text-white
+    }
+
+
+    /* lightmode */
+     .nb-breadcrumbs-srcpath {
+        @apply
+        text-black/50
+    }
+    
+     .nb-breadcrumbs-srcpath:hover {
+        @apply
+        text-black
+    }
+
+     .nb-breadcrumbs-crntpath {
+        @apply
+        text-black
+    }
+
+
+/* global dashboard */
+
+    /* darkmode */
+     .nb-dashboard-bg {
+        @apply
+        bg-[#1E1F1F]/80
+        /* shadow-md */
+        shadow-[#0A0A0A]
+        /* shadow-[#04138C]/80  */
+        border-1
+        border-[#0A0A0A]/50
+        /* border-[#04138C]/80 */
+
+    }
+
+    /* lightmode */
+     .nb-dashboard-bg {
+        @apply
+        bg-[#F4F4F4]/50 
+        /* shadow-md */
+        shadow-[#cacaca]
+        /* shadow-[#04138C]/80  */
+        border-1
+        /* border-[#00a8ff52] */
+        border-[#cacaca]/50
+        /* border-[#04138C]/80 */
+
+    }
+
+/* employee dashboard */
+
+    /* darkmode */
+     .nb-dashboard-text-subheader {
+        @apply
+        text-[#F5F5F5]
+    }
+
+     .nb-box-textcolor {
+        @apply
+        text-[#F5F5F5]/95
+    }
+
+     .nb-dashboard-employeebox-input {
+        @apply
+        bg-[#282A2A]
+    }
+
+     .dptnamefetch-boxname {
+        @apply
+        bg-[#282A2A]
+    }
+
+     .employee201-box-dashboard201 {
+        @apply
+        bg-[#282A2A]
+    }
+
+    /* lightmode */
+     .nb-dashboard-text-subheader {
+        @apply
+        text-[#282A2A]
+    }
+    
+     .nb-dashboard-textheader-color {
+        @apply
+        /* text-[#007dd4] */
+        text-black
+    }
+     .nb-box-textcolor {
+        @apply
+        text-[#525252]/90
+        /* text-[#007dd4]/80 */
+    }
+
+     .nb-dashboard-employeebox-input {
+        @apply
+        bg-gray-200 
+    }
+
+     .employee201-box-dashboard201 {
+        @apply
+        bg-white
+    }
+
+/* attendance dashboard */
+
+    /* daarkmode */
+     .nb-dashboard-attendancebox-color {
+        @apply
+        bg-[#1E1F1F]
+    }
+
+    /* lightmode */
+
+/* department */
+
+    /* darkmode */
+     .nb-department-input {
+        @apply
+        bg-[#1E1F1F]
+    }
+
+     .nb-deptable-boxcolor {
+        @apply
+        bg-[#1E1F1F]/80
+    }
+
+    /* lightmode */
+     .nb-department-input {
+        @apply
+        bg-gray-200
+    }
+
+     .nb-deptable-boxcolor {
+        @apply
+        bg-[#F5F5F5]/80
+    }
+
+/* employee */
+
+    /* darkmode */
+     .nb-employeenamefetch-hovercolor:hover {
+        @apply
+        bg-[#282A2A]
+    }
+    
+    /* lightmode */
+     .nb-employeenamefetch-hovercolor:hover {
+        @apply
+        bg-gray-300/80
+    }
+
+

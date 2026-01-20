@@ -1,0 +1,27 @@
+@import "tailwindcss";
+.request-container {
+    @apply
+    flex flex-col 
+    w-full h-full 
+    gap-y-4
+    overflow-hidden
+}
+
+.request-boxbutton {
+    @apply
+    flex flex-row 
+    w-fit 
+    p-0.5 
+    gap-x-1
+    rounded-lg 
+    bg-[#8bc9ff] 
+    shadow-sm
+}
+
+.request-button {
+    @apply
+    border border-[#0088f0] 
+    rounded-md 
+    px-3 p-0.5 
+    text-center font-semibold text-sm cursor-pointer
+}

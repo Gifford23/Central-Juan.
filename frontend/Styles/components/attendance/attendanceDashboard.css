@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+.attendance-dashboard-box {
+    @apply
+    flex flex-col 
+    items-center justify-center
+    p-5 
+    transition 
+    cursor-pointer
+    rounded-4xl 
+    h-80 w-80 
+    
+    hover:ease-in-out 
+    hover:scale-105 
+    hover:duration-300 
+    hover:shadow-lg
+}
+
+.attendance-dashboard-box_v3 {
+    @apply
+    transition 
+    cursor-pointer
+    rounded-4xl 
+    w-[18vw] h-[30vh] 
+    p-5 shadow
+    border-[1px] 
+    border-slate-300 
+    relative 
+    overflow-hidden 
+    
+    hover:ease-in-out 
+    hover:scale-105 
+    hover:duration-300 
+    hover:shadow-lg
+}

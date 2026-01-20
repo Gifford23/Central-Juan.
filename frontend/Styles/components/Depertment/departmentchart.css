@@ -1,0 +1,53 @@
+.chart-container {
+    display: flex; /* Use Flexbox for layout */
+    justify-content: space-between; /* Space between chart and legend */
+    align-items: flex-start; /* Align items at the start */
+    margin: 20px; /* Add some margin around the container */
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+}
+
+.chart {
+    flex: 1; /* Allow the chart to take available space */
+    max-width: 60%; /* Set a maximum width for the chart */
+    min-width: 300px; /* Set a minimum width for the chart */
+}
+
+.legend-container {
+    max-width: 30%; /* Set a maximum width for the legend container */
+    margin-left: 20px; /* Add some space between the chart and legend */
+    min-width: 200px; /* Set a minimum width for the legend */
+}
+
+.legend {
+    display : flex;
+    flex-direction: column; /* Stack legend items vertically */
+}
+
+.legend-item {
+    display: flex;
+    align-items: center; /* Center align legend items */
+    margin-bottom: 5px; /* Space between legend items */
+}
+
+.legend-color {
+    width: 20px; /* Width of the color box */
+    height: 20px; /* Height of the color box */
+    margin-right: 10px; /* Space between color box and label */
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        flex-direction: column; /* Stack chart and legend vertically on small screens */
+        align-items: center; /* Center align items */
+    }
+
+    .chart {
+        max-width: 100%; /* Allow chart to take full width */
+        margin-bottom: 20px; /* Space between chart and legend */
+    }
+
+    .legend-container {
+        max-width: 100%; /* Allow legend to take full width */
+        margin-left: 0; /* Remove left margin */
+    }
+}

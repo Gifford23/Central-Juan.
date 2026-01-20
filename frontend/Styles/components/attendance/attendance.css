@@ -1,0 +1,209 @@
+@import "tailwindcss";
+
+/* attendance style */
+.att_container {
+  @apply
+
+  h-fit
+  w-auto
+}
+
+.table_container {
+}
+
+.box-arrow {
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 13px; /* Increase the border radius for a more rounded shape */
+    padding: 10px;
+    margin-inline: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    justify-content: center;
+  }
+  
+  .table_att-cont {
+    height: 40vh;
+  }
+
+  th, td {
+
+  }.actions {
+    display: flex;
+    flex-direction: row;
+    column-gap: 5px;
+  }
+
+  tbody {
+  }
+
+  .summary_report {
+    flex-direction: row;
+    overflow-x: auto;
+  }.summary_report::-webkit-scrollbar {
+    display: none;
+  }.overflow-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .SummaryCard_box-presentsummary,
+  .SummaryCard_box-notpresentsummary,
+  .SummaryCard_box-away
+  {
+    background-color: hsl(0, 0%, 90%);
+    border-color: hsl(0, 0%, 90%);
+    box-shadow: 0px 0px 8px 0px hsla(0, 0%, 23%, 0.473);
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 30px;
+  }
+  
+  .SummaryCard_box-presentsummary {
+    @apply
+    flex-2
+  }.SummaryCard_box-notpresentsummary {
+    @apply
+    flex-1
+  }
+  
+  
+  .attendance-psummary {
+    @apply
+    flex flex-col 
+    w-full
+    gap-y-3
+  }
+
+  .SummaryCard_box-away {
+    @apply
+    hidden
+  }.attendance-p-morningsummary {
+    @apply
+    flex flex-row
+    /* grid grid-cols-3  */
+    gap-x-2
+  }.attd-p-groups {
+    @apply
+    justify-between
+    w-full
+  }
+
+  .g1 {
+    margin-bottom: 3vh;
+  }
+
+  .Present {
+    font-size: 20px;
+    font-weight: 500;
+  }.p_card-title {
+    @apply
+    font-normal
+    text-[16px]
+    /* text-gray-600 */
+  }.p_card {
+    font-size: 14px;
+    font-weight: 500;
+  }.p_card_num {
+    font-size: 30px;
+    font-weight: lighter;
+  }
+
+  .table_attendance {
+    background-color: rgba(161, 161, 161, 0.158);
+    border-radius: 20px;
+    display: flex;
+  }
+
+  .attendance-table-info {
+    @apply
+    flex
+    w-full
+    h-full
+    text-sm
+    overflow-x-scroll
+    bg-gray-100
+    rounded-[15px]
+
+    
+  }.attendance-table-info::-webkit-scrollbar {
+    display: none;
+  }
+
+  .header_title {
+    display: flex;
+  }
+
+  .select_month {
+    
+  }
+
+  /* @media (min-width: 425px){ 
+    .summary_report {
+      flex-direction: row;
+    }
+  } */
+
+  @media (max-width: 767px) {
+    .summary_report {
+      flex-direction: column;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .summary_report {
+    }
+    .SummaryCard_box {
+      flex: none;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .SummaryCard_box {
+      flex: none;
+    }
+  }
+
+  @media (max-width: 1300px) {
+    .table_att-cont {
+      height: 47vh;
+    }
+  
+  }
+  
+  /* rounded size */
+  .summary_report,
+  .table_container 
+  {
+    @apply
+
+    /* rounded-[15px] */
+    rounded-[15px]
+  }
+
+
+.attendance-textSize-name{
+  font-size: 25px;
+  text-align: left;
+}
+
+
+@media (min-width: 1900px) {
+  .attendance-textSize-name{
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .attendance-textSize-name{
+    font-size: 20px;
+  }
+}
+
+.break-a-word{
+  word-break: break-word; 
+  overflow-wrap: break-word;
+}

@@ -1,0 +1,80 @@
+@import 'tailwindcss';
+
+.employee201-employee-list {
+    @apply
+    
+    h-full
+    p-1
+    flex flex-col
+    gap-y-1
+    /* border-amber-300 border-2 */
+
+    overflow-y-scroll
+}.employee201-employee-list::-webkit-scrollbar {
+    display: none;
+}
+
+
+.employee201-container-dashboard201 {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    row-gap: 12px;
+}
+
+.header-dashboard201{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    background-color: green;
+    overflow-y: scroll;
+    overscroll-behavior-y: auto;
+}
+
+.employee201-box-dashboard201{
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: row;
+    max-width: 2400px;
+    max-height: 150px;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.employee201-profile201{
+    display: flex;
+    justify-content: center;
+}
+
+.employee-profile201 img{
+    max-width: 70px;
+    max-height: 70px;
+    width: 70px;
+    height: 70px;
+    border-radius: 100%;
+}
+
+.employee-201-noimg {
+    display: flex;
+    justify-content: center;
+    max-width: 55px;
+    width: 100%;
+}
+
+.information201{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.employee-201-container {
+    @apply
+    overflow-y-scroll
+}.employee-201-container::-webkit-scrollbar {
+    display: none;
+}

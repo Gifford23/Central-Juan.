@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+/* start sidebar page ----------------------------- */
+.Glc-sidebar-maincolor {
+    @apply
+    /* bg-[#0088f0] */
+    bg-[#1b4965]
+}
+
+.Glc-sidebar-outletcolor {
+    @apply
+    bg-[#f7fafc]
+    /* bg-[#282A2A] */
+}
+
+.Glc-sidebar-textcolor {
+    @apply
+    /* text-[#E4E4E4] */
+     text-black
+}
+
+.Glc-sidebar-hovercolor {
+    @apply
+    /* hover:bg-[#0088f0]/80 */
+    hover:bg-[#62b6cb]
+}
+
+.Glc-sidebar-selectedhovercolor {
+    @apply
+    /* bg-[#161e25] */
+    /* bg-[#3c4652] */
+    bg-[#bee9e8]
+}
+
+.Glc-sidebar-selectediconcolor {
+    @apply
+    /* text-[#0088f0] */
+    text-[#1b4965]
+}
+
+.Glc-test-sidebar {
+    @apply
+    bg-[#f7fafc]
+}
+
+/* end sidebar page ----------------------------- */
+
+/* start table list ----------------------------- */
+.Glc-tableheader {
+    @apply
+    bg-[#00015a]
+}.Glc-tableheader-text {
+    @apply
+    text-[#E4E4E4]
+}
+
+.Glc-table-background {
+    @apply
+    bg-[#ACCCFC]/20
+}.Glc-table-background-color2 {
+    @apply
+    bg-[#ACCCFC]/50
+}
+
+.Glc-table-bordertop {
+    @apply
+    border-[#04138C]/20
+    border-t-[1.75px]
+}
+/* end table list ----------------------------- */
+
+/* start Dashboard Employee, Attendance, Payroll ----------------------------- */
+
+.Glc-dashboard-bg {
+    @apply
+    bg-[#F4F4F4]/50 
+    /* shadow-md */
+    shadow-[#cacaca]
+    /* shadow-[#04138C]/80  */
+    border-2
+    border-[#cacaca]/50
+    /* border-[#04138C]/80 */
+}
+
+.Glc-dashboard-bg-header {
+    @apply
+    border-[#cacaca]
+}
+
+.Glc-dashboard-text-subheader {
+    @apply
+    text-black/50
+}
+
+.Glc-dashboard-newdesign-bgcolor {
+    @apply
+    from-[#62b6cb] to-[#1b4965]
+}.Glc-dashboard-newdesign-iconcolor {
+    @apply
+    group-hover:text-[#62b6cb]/50  
+}.Glc-dashboard-newdesign-textcolor {
+    @apply
+    group-hover:text-white
+}.Glc-dashboard-newdesign-textcolor2 {
+    @apply
+    group-hover:text-[#bee9e8]
+}
+
+.Glc-contribution-pagibig-bgcolor {
+    @apply
+    from-[#62b6cb] from-30%
+    to-[#0624ab] 
+}.Glc-contribution-philhealth-bgcolor {
+    @apply
+    from-[#FCEA10]
+    to-[#0C9B18] 
+}.Glc-contribution-sss-bgcolor {
+    @apply
+    from-[#1e96fc]
+    to-[#1033cf] 
+}
+
+/* end Dashboard Employee, Attendance, Payroll ----------------------------- */
+
+
+.TH_C {
+    @apply
+    text-lg
+}
+
+

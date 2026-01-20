@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+.empnamefetch-container {
+    @apply
+    flex flex-col
+    gap-y-3
+}
+
+.empnamefetch-boxname {
+    @apply
+    flex flex-col
+    w-full h-fit
+    bg-white 
+    shadow
+    p-5
+    rounded
+
+    overflow-hidden
+    overflow-ellipsis
+}
+
+.empnamefetch-table {
+    @apply
+    flex flex-col
+}
+
+.empnamefetch-table-contentoverflow_contentscroll:hover {
+    @apply
+    break-words
+    text-wrap
+}

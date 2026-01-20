@@ -1,0 +1,192 @@
+@import 'tailwindcss';
+
+.sidebar {
+  @apply
+  overflow-y-hidden
+  flex-row
+  grow
+  h-svh
+  p-2
+  gap-x-2
+}
+
+.sidebar-outlet {
+  @apply
+  overflow-y-scroll 
+  p-3
+  ml-0
+  w-full
+  rounded-[10px]
+}.sidebar-outlet::-webkit-scrollbar {
+  display: none;
+}
+
+.test-sidebar {
+  @apply
+  px-2
+  flex flex-col
+  h-full
+  rounded-[10px]  
+  /* border-3 border-black */
+  /* overflow-y-scroll */
+}.test-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar-container-items {
+  @apply
+  flex flex-row 
+  h-12 w-100 
+  items-center 
+  gap-x-3 pl-3.75 pr-2
+}
+
+/* .test-sidebar .test-sidebar-subname {
+  @apply
+  invisible
+}.test-sidebar:hover .test-sidebar-subname {
+  @apply
+  visible
+  transition-transform
+} */
+
+/* .test-sidebar .sidebar-container-items {
+  @apply
+  justify-center
+}.test-sidebar:hover .sidebar-container-items {
+  @apply
+  justify-start
+} */
+
+/* .test-sidebar .sidebar-lgt {
+  @apply
+  invisible
+}.test-sidebar:hover .sidebar-lgt {
+  @apply
+  visible
+} */
+
+/* main div flex */
+  .sidebar-top,
+  .sidebar-middle,
+  .sidebar-bottom
+  {
+    @apply
+    flex
+  }
+  .sidebar-top {
+    @apply
+    h-20
+    mt-2
+    justify-center 
+    place-items-center
+    rounded-2xl
+    flex flex-nowrap
+    overflow-hidden
+    /* border-2 border-pink-200 */
+    /* p-2 */
+  }
+  .sidebar-middle {
+    @apply
+    flex-10
+    flex
+    flex-col
+    /* border-2 border-pink-400 */
+    overflow-y-scroll
+  }.sidebar-middle::-webkit-scrollbar {
+    display: none;
+  }
+  .sidebar-bottom {
+    @apply
+    /* flex-[1.5] */
+    flex
+    flex-col 
+    items-end
+    /* p-2 */
+    my-3
+    gap-y-2
+    /* border-2 border-pink-600 */
+  }
+
+  .sidebar-contribution-navbar {
+    @apply
+    border-gray-600 
+    border-l-2 
+    my-5 px-3 pt-15
+    w-fit
+    /* transition-transform
+    ease-in
+    duration-300 */
+  }.sidebar-contribution-items {
+    @apply
+    flex
+    h-13 w-13 
+    justify-center items-center 
+    border-1 border-gray-300 
+    rounded-2xl 
+    drop-shadow-xl
+  }
+  
+  .sidebar-middle:hover .sidebar-hasSubMenu {
+    @apply
+    not-sr-only
+  }.sidebar-hasSubMenu {
+    @apply
+    sr-only 
+  }
+  .sidebar-submenu-mainContainer {
+    @apply
+    flex flex-col 
+    mt-2 mb-3 
+    space-y-2
+  }
+  .sidebar-submenu-innerContainer {
+    @apply
+    w-full 
+    flex flex-1 
+    pl-10
+    transition-colors 
+    duration-300 ease-in-out 
+  }
+  .sidebar-submenu-contentContainer {
+    @apply
+    flex flex-row 
+    h-10 w-100 
+    items-center 
+    gap-x-3
+  }
+
+  .sidebar-colormode-button {
+    @apply
+    flex
+  }
+
+  .sidebar-specialbutton-box {
+    @apply
+    flex
+    flex-row
+    items-center
+    justify-end
+    gap-x-2
+    my-2
+  }
+  .sidebar-pin-button {
+    @apply
+    h-8 w-8
+    rounded-lg
+    flex
+    items-center
+    justify-center
+    border
+    border-gray-500
+
+    transition-transform duration-150
+  }.sidebar-pin-button-clicked {
+    @apply
+    /* bg-[#3ea5ff] */
+    bg-[#1b4965]
+    scale-108
+    border-0
+    shadow-sm shadow-[#004c96]/50
+
+  }

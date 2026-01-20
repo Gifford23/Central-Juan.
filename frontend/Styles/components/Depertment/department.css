@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Albert+Sans:wght@100..900&display=swap');
+@import 'tailwindcss';
+
+:root {
+    --font-albert: Albert, "sans-serif";
+}
+
+.head_container {
+    display: flex;
+    height: 60px;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+    padding-bottom: 5px;
+    border-top-left-radius: 50px;
+}
+
+.right_head, .left_head {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.right_head {
+    flex: 1;
+    padding-right: 1.25rem;
+    background-color: white;
+    border-bottom-left-radius: 30px;
+    justify-content: space-evenly;
+}
+
+.left_head {
+    flex: 3;
+    border-radius: 20px;
+    background-color: #b3b3b3;
+
+}
+
+.search_bar {
+    width: 80%;
+    height: 48px;
+    text-align: center;
+    border: 4px solid #ccc;
+    border-radius: 9999px;
+    outline: none;
+    background-color: white;
+}
+
+
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.add_button, .delete_select, .add_employee, .print_BTN {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 9999px;
+    transition: background-color 0.2s;
+    background-color: #d4d4d8;
+    width: 40px;
+    height: 40px;
+}
+
+
+.add_button:hover, .delete_select:hover, .add_employee:hover, .print_BTN:hover {
+    background-color: #a1a1aa;
+}
+
+.table_container, .employee_table_container {
+
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 25px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    
+}
+
+.table_wrapper {
+    max-height: 100lvh;
+    overflow-y: auto;
+    overflow-x: auto;
+    width: 100%;
+    height: 100%;
+}
+
+.table_content {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    display: flex;
+    flex: 1;
+    justify-content: space-evenly;
+    word-break: break-word;
+}
+
+.table_head, .employee_tableHeader {
+
+    color: white;
+    position: sticky;
+    top: 0;
+    height: 70px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+}
+
+.employee_tableBody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.btn-imagesize{
+    display: flex;
+    width: 15px;
+    height: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-logo-Size-Position{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 30px;
+    padding-inline: 8px;
+    padding-block: 4px;
+    border-radius: 10px;
+}
+
+.btn, .editBtn, .deleteBtn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+
+}
+
+.btn-view { background-color: #2563eb; }
+.btn-view:hover { background-color: #1e40af; }
+.btn-edit, .editBtn { background-color: #f59e0b; }
+.btn-edit:hover, .editBtn:hover { background-color: #d97706; }
+.btn-delete, .deleteBtn { background-color: #FF6467; }
+.btn-delete:hover, .deleteBtn:hover { background-color: #b91c1c; }
+
+.loading_text {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+}
+
+@media print {
+    .employee_head, .employee_subhead, .EBAdd_Employee, .EBPrint { display: none; }
+    .employee_tableContainer { display: block; }
+    table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; }
+    th { text-align: left; }
+}
+
+
+.position-dropdown-enter {
+    max-height: 0;
+    overflow: hidden;
+  }
+  
+  .position-dropdown-enter-active {
+    max-height: 500px; /* Adjust based on your content */
+    transition: max-height 400ms ease-in;
+  }
+  
+  .position-dropdown-exit {
+    max-height: 500px; /* Same as enter-active */
+    overflow: hidden;
+  }
+  
+  .position-dropdown-exit-active {
+    max-height: 0;
+    transition: max-height 400ms ease-out;
+  }
+
+  

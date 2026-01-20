@@ -1,0 +1,54 @@
+@import 'tailwindcss';
+
+.salaryGrade-table-container, .employee_table_container {
+    /* background-color: white; */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    
+}
+
+.salaryGrade-table-wrapper {
+    max-height: 100lvh;
+    overflow-y: auto;
+    overflow-x: auto;
+    width: 100%;
+    height: 100%;
+}
+
+
+.salaryGrade-table-content {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    display: flex;
+    flex: 1;
+    justify-content: space-evenly;
+    word-break: break-word;
+}
+
+.salaryGrade-table-head{
+
+    color: white;
+    position: sticky;
+    top: 0;
+    height: 70px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.tr-boxdetails:nth-child(odd) {
+   @apply
+   bg-gray-100
+}
+
+.tr-boxdetails:nth-child(even) {
+    background-color: #ffffff; /* White for even rows */
+}
+
+.tr-boxdetails:hover {
+    @apply
+    bg-gray-300
+}

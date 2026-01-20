@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+.dptnamefetch-container {
+    @apply
+    grid grid-cols-5 
+    gap-3 
+    p-1
+}
+
+.dptnamefetch-boxname {
+    @apply
+    w-full
+    bg-white 
+    shadow
+    p-2 pl-5 
+    rounded 
+
+    overflow-hidden
+    overflow-ellipsis
+}
+
+.dptnamefetch-boxname:hover {
+    @apply
+    text-wrap
+}

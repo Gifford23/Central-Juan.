@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+.modal_input_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.modal_input_content{
+    display: flex;
+    
+}
+
+.modal_btn_space{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 6px;
+}
+
+.modal-content {
+    background: white;
+    padding-inline: 35px;
+    padding-block: 15px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 11;
+  }
+
+  .modal-overlay {
+    @apply
+    backdrop-blur-xs
+  }
+
+  .modal-update-btn{
+    display: flex;
+    background-color: rgb(101, 243, 127);
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .modal-update-btn:hover{
+    background-color: rgb(27, 218, 62);
+  }
+
+  .modal-cancel-btn{
+    display: flex;
+    background-color: rgb(255, 0, 0);
+    padding: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .modal-cancel-btn:hover{
+    background-color: rgb(177, 8, 8);
+  }
+
+  .modal-input-style{
+    border: 1px;
+    height: 100%;
+    background-color: #b3b3b3;
+    border-radius: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+  }
+
+  input[type="date"],
+  input[type="time"],
+  select { 
+    /* border: 1px solid #ccc; */
+    cursor: pointer;
+
+  }
+
+  .modal-input-style:read-only {
+    cursor: not-allowed;
+    background-color: #f0f0f0; /* Light gray to indicate it's disabled */
+    opacity: 0.7;
+  }

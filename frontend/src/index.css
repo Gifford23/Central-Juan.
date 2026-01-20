@@ -1,0 +1,6 @@
+/* Global styles */
+@import "tailwindcss";
+
+@import "tailwindcss/preflight"; /* Replaces @tailwind base */
+@import "tailwindcss/utilities"; /* Replaces @tailwind utilities */
+

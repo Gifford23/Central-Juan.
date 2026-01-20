@@ -1,0 +1,149 @@
+@import 'tailwindcss';
+
+
+  /* Header */
+  .payroll-header {
+    font-size: 28px;
+    color: #333;
+  } 
+
+  
+  /* Buttons */
+  .action-button {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+  }
+
+  .edit-button {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .delete-button {
+    background-color: #f44336;
+    color: #fff;
+  }
+  
+  .add-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-block: 5px;
+  }
+  
+  .employees_info_scroll {
+    overflow-y: scroll;
+  }.employees_info_scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .text_actions {
+    @apply
+    
+    text-[14px]
+  }
+
+  /* rounded sizes */
+  .employees_info_scroll,
+  .payroll_employees_info
+  {
+    @apply
+
+    rounded-[15px]
+  }
+
+  .payroll-table {
+    @apply
+    overflow-y-scroll
+    w-full
+    rounded-2xl
+
+  }.payroll-table::-webkit-scrollbar {
+    display: none;
+  }
+    
+  .payroll-table-head {
+    @apply
+    w-full
+  }
+  .payroll-table-head {
+    background-color: hsl(0, 0%, 70%);
+  }
+
+  .payroll-table-body {
+    @apply
+    w-full
+  }
+
+  .payroll-table-content {
+    @apply
+    items-center
+    justify-center
+    flex flex-col
+    px-3 py-2
+    /* border-1 */
+    gap-x-2
+  }
+  
+  .payroll-employee-sidelist {
+    @apply
+    md:w-60 lg:w-80 xl:w-90 h-full
+    gap-y-2
+    flex flex-col
+
+  }
+  /* .payroll-employee-sidelist::-webkit-scrollbar {
+    display: none;
+  } */
+
+  .payroll-table-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .payroll-header-buttons {
+    @apply
+    flex flex-row 
+    items-center 
+    px-3 gap-x-2
+    rounded-[10px]
+    cursor-pointer
+
+    bg-gray-400
+    focus:bg-gray-300
+    hover:bg-gray-300
+    shadow-gray-200
+    border-gray-400
+    ring-gray-400
+
+    hover:border-2
+    shadow-inner
+    drop-shadow-md
+    focus:ring-[1.25px]
+
+  }
+
+  .payroll-tableheader {
+    @apply
+    text-center
+  }
+
+  .payroll-grp1, .payroll-grp2 {
+    @apply
+    gap-x-10
+    px-8
+    pr-10
+  }
+
+  .payroll-content-textelipis {
+    @apply
+    text-ellipsis
+    overflow-hidden
+    hover:text-wrap
+  }

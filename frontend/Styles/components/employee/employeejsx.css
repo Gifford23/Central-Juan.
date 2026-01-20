@@ -1,0 +1,100 @@
+/* Ensure proper font usage */
+@import url('https://fonts.googleapis.com/css2?family=Albert+Sans:wght@100..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+    --font-albert: Albert, "sans-serif";
+}
+
+
+@media print {
+    .employee_head, .employee_subhead, .EBAdd_Employee, .EBPrint {
+        display: none;
+    }
+    .employee_tableContainer {
+        display: block;
+    }
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 8px;
+    }
+    th {
+        text-align: left;
+    }
+}
+
+  .employee-table-container {
+    @apply  
+    flex
+    w-full
+    h-full
+    text-sm
+    overflow-x-scroll
+    bg-gray-100
+    rounded-[15px]
+  }
+  
+  .employee-table-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .employee_table_head {
+    /* B3B3B3 */
+    @apply
+    flex
+    sticky top-0
+  }
+  
+  .employee_table_head {
+    background-color: rgb(179, 179, 179);
+  }
+
+  .employee-header-buttons {
+    @apply
+    flex flex-row 
+    items-center 
+    px-3 gap-x-2
+    rounded-[10px]
+    cursor-pointer
+
+    bg-gray-400
+    focus:bg-gray-300
+    hover:bg-gray-300
+    shadow-gray-200
+    border-gray-400
+    ring-gray-400
+
+    hover:border-2
+    shadow-inner
+    drop-shadow-md
+    focus:ring-[1.25px]
+
+  }.employee-header-buttonsicons {
+    @apply
+    sr-only
+    visible
+  }.group:hover .employee-header-buttonsicons {
+    @apply
+    not-sr-only
+  }
+  .employee-table-contentoverflow_contentscroll:hover, 
+  .employee-table-headeroverflow:hover {
+    @apply
+    break-words
+    text-wrap
+  }
+
+  .employee-newheaderbuttons-solid {
+    @apply
+    bg-[#010374]
+    text-white
+  }
+
+  .employee-newheaderbuttons-outline {
+    @apply
+    border-[#010374]
+    text-[#010374]
+  }
+
+  /* media query :: responsive */

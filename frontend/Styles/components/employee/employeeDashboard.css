@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+.empdashboard-Departmentfetch, .empdashboard-Employeefetch{
+    @apply
+    h-full 
+    overflow-y-scroll
+}.empdashboard-Departmentfetch::-webkit-scrollbar, .empdashboard-Employeefetch::-webkit-scrollbar {
+    display: none;
+}
+
+.empdashboard-EmployeeListAdd {
+    @apply
+    flex justify-center items-center
+    absolute 
+    w-15 h-15 
+    bottom-5 right-5 
+    rounded-2xl  
+    cursor-pointer
+    
+    transform transition-transform duration-100 hover:scale-105
+
+    bg-[#04138C]/20 hover:bg-[#04138C]
+    shadow-md shadow-[#04138C]/20 hover:shadow-[#04138C]/60 
+}
+
+.empdashboard-EmployeeListAddIcon {
+    @apply
+    text-[#00118f]/70
+}.empdashboard-EmployeeListAdd:hover .empdashboard-EmployeeListAddIcon {
+    @apply
+    text-white
+}
+
+.employee-dashboard-box-1 {
+    @apply
+    h-fit max-h-[30%] 
+    flex flex-col 
+    rounded-2xl 
+    p-5 
+    gap-y-5
+}
+
+.employee-dashboard-box-2 {
+    @apply
+    relative 
+    flex flex-col 
+    h-full 
+    p-5 
+    overflow-y-hidden 
+    rounded-2xl
+}
+
+.employee-dashboard-box-3 {
+    @apply
+    flex flex-col
+    h-full w-[35%] 
+    p-5 
+    space-y-5 
+    rounded-2xl
+}
+
+.employee-dashboard-box-1.negro {
+    @apply
+    border-5
+}

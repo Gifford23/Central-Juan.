@@ -1,0 +1,194 @@
+@import "tailwindcss";
+
+.login-container{
+    display: flex;
+    background-color: aqua;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.left-login-container{
+    display: flex;
+    height: 100%;
+    width: 100vw;
+    flex: 2;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+
+
+
+.right-login-container{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(59, 180, 250);
+    align-items: center;
+}
+
+
+
+.login-header-form{
+    width: 100%;
+    min-width: 400px;
+}
+
+.login-header-form h1{
+    font-size: 50px;
+    font-weight: bold;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+
+.login-form{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 300px;
+    background-color: rgb(255, 255, 255);
+    align-items: center;
+    border-radius: 25px;
+    padding: 30px;
+    
+}
+
+.login-input{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px;
+    
+}
+
+.textfield-login{
+    width: 100%;
+    font-size: 1rem;
+    background-color: rgb(59, 180, 250);
+    border-radius: 10px;
+    color: white;
+}
+
+.login-input input{
+    width: 100%;
+    padding: 10px;
+    margin: 3px;
+    font-size: 1rem;
+    /* background-color: rgb(59, 180, 250); */
+    border-radius: 5px;
+    color: black;
+}
+
+/* .login-form label{
+    width: 90%;
+    gap: 5px;
+    align-items: center;
+    padding: 15px;
+} */
+
+.login-form button{
+    width: 80%;
+    background-color: rgb(76, 76, 253);
+    border-radius: 20px;
+    color: white;
+}
+
+.login-form button:hover{
+    background-color: rgb(56, 56, 230);
+    transform: scale(1.03);
+    cursor: pointer;
+}
+
+.login-specialtext {
+    @apply
+    flex flex-row gap-x-1
+    bottom-2 right-3 absolute
+    items-end italic
+}
+
+@media (max-width: 768px) {
+    .login-container{
+        direction: flex;
+        flex-direction: column;
+        height: 93vh;
+
+    }
+
+    .login-input input{
+        background-color: white;
+    }
+
+    .left-login-container{
+        display: none;
+    }
+
+    .right-login-container{
+        background-color: white;
+        height: 0%;
+        overflow: hidden;
+        
+    }
+
+    .textfield-login{
+        background-color: white;
+    }
+
+    .mobile-form{
+         height: 35%;
+    }
+
+    .mobile-logo{
+        direction: flex;
+        width: auto;
+        height: 100px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 100px;
+    }
+
+    .login-form{
+        background-color: rgb(59, 180, 250);
+        padding: 15px;
+        min-width: 250px;
+        width: 60%;
+        direction: flex;
+    }
+
+    .login-form
+
+    .show-password{
+        font-size: 15px;
+        text-align: center;
+    }
+    
+    .login-form button{
+        width: 100px;
+        height: none;
+        padding: 4px ;
+    }
+
+    .login-header-form h1{
+        font-size: 50px;
+        font-weight: bold;
+        color: black;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .image-login-container{
+        max-height: 50px;
+    }
+
+    .img-l{
+        max-height: 100px;
+    }
+
+}

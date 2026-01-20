@@ -1,0 +1,297 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+@import "@fontsource/jetbrains-mono";
+
+
+@font-face {
+    font-family: 'Telidon';
+    src: url('/path-to-font/Telidon.woff2') format('woff2');
+  }
+
+
+@font-face {
+    font-family: 'General Sans';
+    src: url('/fonts/GeneralSans-Regular.woff2') format('woff2');
+    }
+
+@theme{
+    --font-arial: Arial, "sans-serif";
+}
+
+#root{
+    @apply
+    font-sans
+    text-nowrap
+    /* bg-green-100 */
+    
+}
+#root::-webkit-scrollbar {
+    display: none;
+}
+
+#body {
+    @apply
+    font-sans
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+.container {
+    @apply
+    flex
+    flex-col
+    h-full
+    /* max-h-[100%] */
+    w-full
+    max-w-[100%]
+}
+
+
+.head_title{
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.employeeDTR-size{
+    min-width: 120px;
+    text-align: center;
+}
+
+table {
+    flex-direction: column;
+    width: 100%;
+    justify-content: space-evenly;
+}   
+
+tr {
+    @apply
+    flex
+    p-1
+    w-full
+    
+}
+
+th, td {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    word-break: break-all;
+    display: flex;
+    flex: 1;
+    
+}
+
+th::-webkit-scrollbar {
+    display: none;
+}td::-webkit-scrollbar {
+    display: none;
+}
+
+/* EmployeeBarChart.css */
+.bar-chart-container {
+    background-color: #1e1e2f; /* Dark background for the chart container */
+    padding: 20px; /* Padding around the chart */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    height: 400px; /* Set a fixed height for the chart */
+    width: 100%; /* Full width */
+  }
+
+    /* styles.css */
+
+/* Default text size */
+.text-resize {
+    font-size: 9px; /* Default size */
+  }
+  
+  /* Medium screens and larger */
+  @media (min-width: 768px) {
+    .text-resize {
+        font-size: 9px; /* Size for medium screens */
+    }
+  }
+  
+  /* Large screens and larger */
+  @media (min-width: 1300px) {
+    .text-resize {
+        font-size: 16px; /* Size for large screens */
+    }
+  }
+
+
+  .bar-chart-container {
+    min-width: 300px;
+    max-width: 500px;
+    width: 100%;
+    height: 50vh; /* Adjust height as needed */
+    margin: 20px;
+  }
+
+  /* global table */
+
+    .Glb-table {
+        @apply
+        flex flex-col
+        rounded-lg
+        overflow-y-scroll
+        backdrop-blur-xs
+    }.Glb-table::-webkit-scrollbar {
+        @apply
+        hidden
+    }
+
+    .Glb-group-1 {
+        @apply
+        sticky top-0
+    }
+
+    .Glb-group-1, .Glb-group-2 {
+        @apply
+        flex flex-row 
+        gap-x-4
+    }
+
+    .Glb-input {
+        @apply
+        flex w-200 
+        justify-center
+    }
+
+    .Glb-table-contentoverflow, .Glb-table-headeroverflow {
+        @apply
+        w-full
+        py-2
+        content-center
+        justify-start
+        overflow-hidden
+    }
+    
+    .Glb-table-contentoverflow_contentscroll {
+        @apply
+        h-full
+        overflow-hidden
+        content-center
+        text-ellipsis
+    }
+    
+    .Glb-table-headeroverflow {
+        @apply
+        font-bold
+        overflow-hidden
+        w-full
+        text-ellipsis   
+    }.Glb-table-headeroverflow::-webkit-scrollbar {
+        @apply
+        hidden 
+    }
+
+    @layer utilities {
+        /* Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+    
+        .no-scrollbar {
+          -ms-overflow-style: none; /* IE and Edge */
+          scrollbar-width: none; /* Firefox */
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px; /* horizontal scrollbar height */
+            width: 6px;  /* vertical scrollbar width */
+          }
+        
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent; /* or use a light gray */
+          }
+        
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.3); /* dark with opacity */
+            border-radius: 10px;
+            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5); /* inner shadow effect */
+          }
+        
+          .custom-scrollbar {
+            scrollbar-color: rgba(0, 0, 0, 0.3) transparent; /* Firefox */
+            scrollbar-width: thin;
+          }
+    }
+
+
+/* Add this to your CSS file */
+@media (max-width: 768px) {
+    .sidebar {
+      flex-direction: row; /* Change to row layout */
+      overflow-x: auto; /* Allow horizontal scrolling */
+    }
+  
+    .sidebar-middle {
+      display: none; /* Hide the sidebar in mobile view */
+    }
+  
+    .sidebar-dropdown {
+      display: block; /* Show dropdown in mobile view */
+    }
+  
+    .sidebar-item {
+      display: flex; /* Flex layout for items */
+      justify-content: space-between; /* Space between icon and text */
+    }
+  
+    .sidebar-submenu {
+      display: none; /* Hide submenu by default */
+    }
+  
+    .sidebar-item.active .sidebar-submenu {
+      display: block; /* Show submenu when item is active */
+    }
+  }
+
+
+/* Hide both by default */
+.mainAdminNav,
+.mobileAdminNav {
+    display: none;
+}
+
+/* Show desktop nav on desktop */
+@media (min-width: 768px) {
+    .mainAdminNav {
+        display: flex; /* Show mainAdminNav on desktop */
+    }
+    .mobileAdminNavv {
+        display: none; /* Hide mobileAdminNav on desktop */
+    }
+    .layout-mobileAdmin{
+      display: none;
+    }
+
+}
+
+/* Show mobile nav on mobile */
+@media (max-width: 768px) {
+    .mainAdminNav {
+        display: none; /* Hide mainAdminNav on mobile */
+    }
+    .mobileAdminNavv {
+        display: flex; /* Show MobileAdminNav on mobile */
+    }
+    .hide-my-layout{
+      display:none;
+    }
+    .x-nga-scroll-sa-global {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin: 0px;
+    }
+
+    
+    
+}
+
+
