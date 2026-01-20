@@ -17,7 +17,7 @@ import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
 import BASE_URL from "../../../backend/server/config";
 import { CalendarCog, ReceiptText, Printer } from "lucide-react";
-import PayrollLog from "../../components/payroll/payrollLog"; // Adjust the import path accordingly
+import PayrollLog from "./payrollLog";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { Tooltip } from "@mui/material";
 import { tooltipClasses } from "@mui/material";

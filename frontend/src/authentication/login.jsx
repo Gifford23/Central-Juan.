@@ -2,11 +2,19 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { Eye, EyeOff, LogIn, UserRound, Mail, Lock, KeyRound } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  LogIn,
+  UserRound,
+  Mail,
+  Lock,
+  KeyRound,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import "../../Styles/authentication/login.css";
 import { useSession } from "../context/SessionContext";
-import BASE_URL from "../../backend/server/config";
+import BASE_URL from "@backend/config";
 import useRoles from "../authentication/useRoles";
 import Snowfall from "react-snowfall";
 
@@ -29,12 +37,13 @@ export default function Login() {
       const response = await axios.post(
         `${BASE_URL}/login.php`,
         { username, password },
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json" } },
       );
 
       if (response.data.message === "Login successful") {
         const userRole = response.data.role?.toUpperCase();
-        const actualFullName = response.data.full_name || response.data.username;
+        const actualFullName =
+          response.data.full_name || response.data.username;
 
         const userObject = {
           user_id: response.data.user_id,
@@ -48,7 +57,13 @@ export default function Login() {
         if (remember) localStorage.setItem("user", JSON.stringify(userObject));
         setUser(userObject);
 
-        Swal.fire({ icon: "success", title: "Welcome!", text: `Hello, ${actualFullName}!`, timer: 1500, showConfirmButton: false });
+        Swal.fire({
+          icon: "success",
+          title: "Welcome!",
+          text: `Hello, ${actualFullName}!`,
+          timer: 1500,
+          showConfirmButton: false,
+        });
 
         // Decide route based on role
         const employeeRoles = roles
@@ -64,20 +79,34 @@ export default function Login() {
           else navigate("/unauthorized");
         }, 1400);
       } else {
-        Swal.fire({ icon: "error", title: "Login Failed", text: response.data.message || "Invalid username or password" });
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: response.data.message || "Invalid username or password",
+        });
       }
     } catch (error) {
       console.error("Login error:", error);
-      Swal.fire({ icon: "warning", title: "Server Issue", text: "Hostinger might be under high load. Please check their status page.", footer: `<a href=\"https://status.hostinger.com\" target=\"_blank\" rel=\"noopener\" class=\"text-indigo-600 underline font-semibold\">Check Hostinger Status</a>` });
+      Swal.fire({
+        icon: "warning",
+        title: "Server Issue",
+        text: "Hostinger might be under high load. Please check their status page.",
+        footer: `<a href=\"https://status.hostinger.com\" target=\"_blank\" rel=\"noopener\" class=\"text-indigo-600 underline font-semibold\">Check Hostinger Status</a>`,
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  if (rolesLoading) return <div className="flex items-center justify-center min-h-screen">Loading roles...</div>;
+  if (rolesLoading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading roles...
+      </div>
+    );
 
   return (
-<div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-sky-100 via-white to-sky-200">
+    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-sky-100 via-white to-sky-200">
       {/* LEFT - Branding / illustration */}
       <motion.div
         initial={{ opacity: 0, x: -40 }}
@@ -86,7 +115,11 @@ export default function Login() {
         className="hidden md:flex md:w-1/2 items-center justify-center p-12"
       >
         <div className="max-w-md text-center">
-          <img src="/systemImage/HorizonHR-logoPC.png" alt="HorizonHR" className="mx-auto w-100 drop-shadow-2xl" />
+          <img
+            src="/systemImage/HorizonHR-logoPC.png"
+            alt="HorizonHR"
+            className="mx-auto w-100 drop-shadow-2xl"
+          />
           {/* <h2 className="mt-6 text-3xl font-extrabold text-sky-700">Horizon HR Management</h2> */}
           {/* <p className="mt-3 text-slate-600">Secure access for employees and administrators — neat, fast, and mobile-friendly.</p> */}
 
@@ -109,21 +142,24 @@ export default function Login() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-  className="flex w-full md:w-1/2 items-center justify-center p-6 min-h-screen"
+        className="flex w-full md:w-1/2 items-center justify-center p-6 min-h-screen"
       >
         <div className="w-full max-w-lg bg-white shadow-2xl rounded-2xl p-8 border border-gray-100">
-<div className="flex flex-col items-center text-center gap-3 mb-6">
-  <div className="p-3 rounded-xl bg-sky-50 border border-sky-100">
-    <UserRound className="w-10 h-10 text-sky-600" />
-  </div>
+          <div className="flex flex-col items-center text-center gap-3 mb-6">
+            <div className="p-3 rounded-xl bg-sky-50 border border-sky-100">
+              <UserRound className="w-10 h-10 text-sky-600" />
+            </div>
 
-  <h1 className="text-2xl font-bold text-slate-800">Welcome back</h1>
-  <p className="text-sm text-slate-500">Sign in to continue to Horizon HR</p>
-</div>
-
+            <h1 className="text-2xl font-bold text-slate-800">Welcome back</h1>
+            <p className="text-sm text-slate-500">
+              Sign in to continue to Horizon HR
+            </p>
+          </div>
 
           <form onSubmit={handleLogin} className="space-y-5">
-            <label className="block text-sm font-semibold text-slate-700">User ID</label>
+            <label className="block text-sm font-semibold text-slate-700">
+              User ID
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Mail className="w-5 h-5 text-slate-400" />
@@ -139,7 +175,9 @@ export default function Login() {
               />
             </div>
 
-            <label className="block text-sm font-semibold text-slate-700">Password</label>
+            <label className="block text-sm font-semibold text-slate-700">
+              Password
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock className="w-5 h-5 text-slate-400" />
@@ -170,7 +208,11 @@ export default function Login() {
                 {/* <span className="text-slate-600">Remember me</span> */}
               </label>
 
-              <button type="button" className="text-sm text-sky-600 hover:underline" onClick={() => navigate('/reset-password')}>
+              <button
+                type="button"
+                className="text-sm text-sky-600 hover:underline"
+                onClick={() => navigate("/reset-password")}
+              >
                 Forgot password?
               </button>
             </div>
@@ -233,7 +275,6 @@ export default function Login() {
               Central Juan I.T. Solutions
             </a>
           </div>
-
         </div>
       </motion.div>
     </div>
