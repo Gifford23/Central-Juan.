@@ -5,6 +5,17 @@ import { useLocation } from "react-router-dom";
 import BASE_URL from "../../../backend/server/config";
 import NotificationActionButtonEmp from "./NotificationComponents/NotificationActionButtonEmp";
 import { useSession } from "../../context/SessionContext";
+import {
+  Bell,
+  Clock,
+  Calendar,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  User,
+  FileText,
+  Timer,
+} from "lucide-react";
 
 const formatDate = (dateStr) => {
   if (!dateStr) return "—";
@@ -26,6 +37,55 @@ const formatTime = (time) => {
     minute: "2-digit",
     hour12: true,
   });
+};
+
+// Helper functions for elegant design
+const getNotificationIcon = (type) => {
+  switch (type) {
+    case "Overtime":
+      return <Timer className="w-4 h-4" />;
+    case "Leave":
+      return <Calendar className="w-4 h-4" />;
+    case "Late Attendance":
+      return <Clock className="w-4 h-4" />;
+    default:
+      return <Bell className="w-4 h-4" />;
+  }
+};
+
+const getStatusIcon = (status) => {
+  switch (status) {
+    case "Approved":
+      return <CheckCircle className="w-4 h-4 text-green-600" />;
+    case "Rejected":
+      return <XCircle className="w-4 h-4 text-red-600" />;
+    default:
+      return <AlertCircle className="w-4 h-4 text-yellow-600" />;
+  }
+};
+
+const getTypeColor = (type) => {
+  switch (type) {
+    case "Overtime":
+      return "bg-blue-50 border-blue-200 text-blue-700";
+    case "Leave":
+      return "bg-green-50 border-green-200 text-green-700";
+    case "Late Attendance":
+      return "bg-orange-50 border-orange-200 text-orange-700";
+    default:
+      return "bg-purple-50 border-purple-200 text-purple-700";
+  }
+};
+
+const getStatusColor = (status) => {
+  switch (status) {
+    case "Approved":
+      return "bg-green-100 text-green-800 border-green-300";
+    case "Rejected":
+      return "bg-red-100 text-red-800 border-red-300";
+    default:
+      return "bg-yellow-100 text-yellow-800 border-yellow-300";
+  }
 };
 
 const NotificationList = () => {
@@ -202,7 +262,28 @@ const NotificationList = () => {
   }
 
   return (
-    <div className="flex flex-col w-full h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900">
+                Notifications
+              </h1>
+            </div>
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <div className="text-xs sm:text-sm text-gray-500">
+                {filteredItems.length}{" "}
+                {filteredItems.length === 1 ? "item" : "items"}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Action Bar */}
       <NotificationActionButtonEmp
         selectedIds={selectedIds}
         onDeleteSelected={handleDeleteSelected}
@@ -214,120 +295,177 @@ const NotificationList = () => {
         setFilterStatus={setFilterStatus}
       />
 
-      <div className="flex-1 p-2 space-y-2 overflow-auto pb-20">
+      {/* Content */}
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
         {loading && (
-          <div className="text-center text-sm text-gray-500">
-            Loading notifications…
+          <div className="flex flex-col items-center justify-center py-8 sm:py-12">
+            <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-blue-600"></div>
+            <p className="mt-2 sm:mt-4 text-sm sm:text-base text-gray-500">
+              Loading notifications...
+            </p>
           </div>
         )}
 
         {!loading && filteredItems.length === 0 && (
-          <div className="text-center text-sm text-gray-500">
-            No notifications found.
+          <div className="flex flex-col items-center justify-center py-8 sm:py-12">
+            <div className="bg-gray-100 rounded-full p-3 sm:p-4 mb-3 sm:mb-4">
+              <Bell className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
+            </div>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+              No notifications found
+            </h3>
+            <p className="text-sm text-gray-500 text-center px-4">
+              {filterType !== "All" || filterStatus !== "All"
+                ? "Try adjusting your filters to see more notifications."
+                : "You're all caught up! No new notifications."}
+            </p>
           </div>
         )}
 
-        {filteredItems.map((item) => (
-          <div
-            key={item._localId}
-            className="w-full max-w-full sm:max-w-md p-3 mx-auto bg-white rounded-lg shadow"
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={selectedIds.has(item._localId)}
-                  onChange={() => toggleSelect(item._localId)}
-                  className="w-4 h-4 mt-1"
-                />
-                <div>
-                  <div className="text-sm font-semibold">
-                    {formatDate(item.date_display)}
+        {/* Responsive Notification Cards */}
+        <div className="space-y-3 sm:space-y-4 pb-6 sm:pb-8">
+          {filteredItems.map((item) => (
+            <div
+              key={item._localId}
+              className="bg-white rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border border-gray-100 overflow-hidden"
+            >
+              {/* Card Header */}
+              <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.has(item._localId)}
+                      onChange={() => toggleSelect(item._localId)}
+                      className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:ring-2"
+                    />
+                    <div className="flex items-center space-x-2 sm:space-x-2">
+                      <div
+                        className={`p-1.5 sm:p-2 rounded-lg ${getTypeColor(item.request_type)}`}
+                      >
+                        {getNotificationIcon(item.request_type)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm sm:text-base font-semibold text-gray-900 truncate">
+                          {item.request_type || "Notification"}
+                        </div>
+                        <div className="text-xs sm:text-sm text-gray-500 truncate">
+                          {formatDate(item.date_display)} •{" "}
+                          {item.employee_name || item.employee_id}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-500">
-                    {item.employee_name || item.employee_id || ""}
+                  <div className="flex items-center space-x-1 sm:space-x-2">
+                    <div
+                      className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-medium border ${getStatusColor(item.status)}`}
+                    >
+                      <div className="flex items-center space-x-1">
+                        {getStatusIcon(item.status)}
+                        <span className="hidden sm:inline">
+                          {item.status || "Pending"}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <span
-                className={`text-xs px-2 py-0.5 rounded-full whitespace-nowrap ml-2 ${
-                  item.request_type === "Overtime"
-                    ? "bg-blue-100 text-blue-600"
-                    : item.request_type === "Leave"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-purple-100 text-purple-600"
-                }`}
-              >
-                {item.request_type || "Notification"}
-              </span>
+              {/* Card Content */}
+              <div className="px-3 sm:px-6 py-3 sm:py-4">
+                {/* Type-specific content */}
+                {item.request_type === "Late Attendance" && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
+                    <div className="bg-blue-50 rounded-lg p-3 sm:p-4">
+                      <div className="text-xs sm:text-sm font-medium text-blue-700 mb-1">
+                        Morning Shift
+                      </div>
+                      <div className="text-sm sm:text-base text-gray-900">
+                        {formatTime(item.current_time_in_morning)} /{" "}
+                        {formatTime(item.current_time_out_morning)}
+                      </div>
+                    </div>
+                    <div className="bg-orange-50 rounded-lg p-3 sm:p-4">
+                      <div className="text-xs sm:text-sm font-medium text-orange-700 mb-1">
+                        Afternoon Shift
+                      </div>
+                      <div className="text-sm sm:text-base text-gray-900">
+                        {formatTime(item.current_time_in_afternoon)} /{" "}
+                        {formatTime(item.current_time_out_afternoon)}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {item.request_type === "Overtime" && (
+                  <div className="bg-blue-50 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="text-xs sm:text-sm font-medium text-blue-700 mb-1">
+                          Requested Hours
+                        </div>
+                        <div className="text-lg sm:text-xl font-bold text-gray-900">
+                          {item.hours_requested
+                            ? `${item.hours_requested}h ${item.minutes_requested || 0}m`
+                            : "N/A"}
+                        </div>
+                      </div>
+                      <Timer className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 flex-shrink-0" />
+                    </div>
+                  </div>
+                )}
+
+                {item.request_type === "Leave" && (
+                  <div className="bg-green-50 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                      <div>
+                        <div className="text-xs sm:text-sm font-medium text-green-700 mb-1">
+                          From
+                        </div>
+                        <div className="text-sm sm:text-base font-semibold text-gray-900">
+                          {formatDate(item.date_from)}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-xs sm:text-sm font-medium text-green-700 mb-1">
+                          Until
+                        </div>
+                        <div className="text-sm sm:text-base font-semibold text-gray-900">
+                          {formatDate(item.date_until)}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-green-200">
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs sm:text-sm font-medium text-green-700">
+                          Total Days
+                        </div>
+                        <div className="text-lg sm:text-xl font-bold text-gray-900">
+                          {item.total_days || 1}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Reason Section */}
+                <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
+                  <div className="flex items-start space-x-2 sm:space-x-3">
+                    <FileText className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                        Reason / Details
+                      </div>
+                      <div className="text-sm sm:text-base text-gray-900 leading-relaxed break-words">
+                        {item.reason || "No reason provided"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-
-            {/* Late Attendance */}
-            {item.request_type === "Late Attendance" && (
-              <div className="mt-2 text-xs">
-                <div>
-                  AM: {formatTime(item.current_time_in_morning)} /{" "}
-                  {formatTime(item.current_time_out_morning)}
-                </div>
-                <div>
-                  PM: {formatTime(item.current_time_in_afternoon)} /{" "}
-                  {formatTime(item.current_time_out_afternoon)}
-                </div>
-              </div>
-            )}
-
-            {/* Overtime */}
-            {item.request_type === "Overtime" && (
-              <div className="mt-2 text-xs">
-                <strong>Credit:</strong>{" "}
-                {item.hours_requested
-                  ? `${item.hours_requested} hr ${item.minutes_requested || 0} min`
-                  : "N/A"}
-              </div>
-            )}
-
-            {/* Leave */}
-            {item.request_type === "Leave" && (
-              <div className="mt-2 text-xs">
-                <div>
-                  <strong>From:</strong> {formatDate(item.date_from)} →{" "}
-                  <strong>Until:</strong> {formatDate(item.date_until)}
-                </div>
-                <div>
-                  <strong>Total Days:</strong> {item.total_days || 1}
-                </div>
-              </div>
-            )}
-
-            {/* Status (common to all) */}
-            <div className="mt-2 text-xs">
-              <strong>Status:</strong>{" "}
-              <span
-                className={
-                  item.status === "Approved"
-                    ? "text-green-600"
-                    : item.status === "Rejected"
-                      ? "text-red-600"
-                      : "text-yellow-600"
-                }
-              >
-                {item.status ?? "Pending"}
-              </span>
-            </div>
-
-            {/* Reason (responsive, wraps and preserves newlines) */}
-            <div className="mt-2">
-              <div className="text-xs font-medium mb-1">Reason:</div>
-              <div
-                className="text-sm text-gray-700 whitespace-pre-wrap break-words overflow-wrap anywhere"
-                style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-              >
-                {item.reason || "No reason provided"}
-              </div>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
