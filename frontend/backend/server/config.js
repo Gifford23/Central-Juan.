@@ -6,7 +6,7 @@
 // const BASE_URL = import.meta.env.VITE_BASE_URL;
 //const BASE_URL = "https://anticipated-hopefully-models-metallic.trycloudflare.com/central_juan/backend/"
 // const BASE_URL = "https://hris.centraljuan.com/...";
-const BASE_URL = "http://localhost/central_juan/backend/";
+const BASE_URL = "http://localhost/central_juan/backend";
 // const BASE_URL = "http://localhost/central_juan/backend";
 // const BASE_URL = "http://10.0.254.56/central_juan/backend";
 

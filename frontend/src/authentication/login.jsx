@@ -14,7 +14,7 @@ import {
 import { motion } from "framer-motion";
 import "../../Styles/authentication/login.css";
 import { useSession } from "../context/SessionContext";
-import BASE_URL from "@backend/config";
+import BASE_URL from "../../../backend/server/config";
 import useRoles from "../authentication/useRoles";
 import Snowfall from "react-snowfall";
 
@@ -35,7 +35,7 @@ export default function Login() {
 
     try {
       const response = await axios.post(
-        `${BASE_URL}/login.php`,
+        "/api/login.php",
         { username, password },
         { headers: { "Content-Type": "application/json" } },
       );

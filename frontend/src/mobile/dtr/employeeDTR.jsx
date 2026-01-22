@@ -171,7 +171,26 @@ const EmployeeDTR = ({ employeeId }) => {
 
       {/* --- Data Table --- */}
       <div className="overflow-x-auto grow bg-gray-50/30">
-        <table className="w-full text-left border-collapse table-fixed">
+        <style jsx>{`
+          .dtr-table th,
+          .dtr-table td {
+            display: table-cell;
+            vertical-align: middle;
+            width: auto;
+            flex: none;
+            word-break: normal;
+            text-align: left;
+          }
+          .dtr-table th.text-center,
+          .dtr-table td.text-center {
+            text-align: center;
+          }
+          .dtr-table th.text-right,
+          .dtr-table td.text-right {
+            text-align: right;
+          }
+        `}</style>
+        <table className="dtr-table w-full text-left border-collapse table-fixed">
           <thead>
             <tr className="border-b border-gray-200 bg-gray-50/50">
               <th className="py-4 px-6 text-xs font-bold uppercase text-gray-500 tracking-wider w-[20%]">
@@ -236,7 +255,7 @@ const EmployeeDTR = ({ employeeId }) => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: index * 0.03 }}
-                    className="hover:bg-blue-50/30 transition-colors group cursor-default"
+                    className="hover:bg-blue-50/30 transition-colors group cursor-default border-b border-gray-50"
                   >
                     {/* Date Column */}
                     <td className="py-4 px-6">
@@ -269,11 +288,9 @@ const EmployeeDTR = ({ employeeId }) => {
                     </td>
 
                     {/* Credit Column */}
-                    <td className="py-4 px-6 align-middle">
-                      <div className="flex justify-center">
-                        <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-50 font-bold text-gray-700 text-sm border border-gray-200">
-                          {record.days_credited || 0}
-                        </div>
+                    <td className="py-4 px-6 text-center">
+                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-50 font-bold text-gray-700 text-sm border border-gray-200">
+                        {record.days_credited || 0}
                       </div>
                     </td>
 
@@ -302,20 +319,30 @@ const EmployeeDTR = ({ employeeId }) => {
 
 const TimeCell = ({ inTime, outTime }) => {
   if (!inTime && !outTime)
-    return <span className="text-xs text-gray-300 italic">No logs</span>;
+    return (
+      <div className="flex items-center justify-center py-2">
+        <span className="text-xs text-gray-300 italic font-medium">
+          No logs
+        </span>
+      </div>
+    );
 
   return (
-    <div className="flex flex-col gap-1">
-      <div className="flex items-center gap-2">
-        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
-        <span className="text-xs text-gray-500 w-6">IN</span>
+    <div className="flex flex-col gap-1.5 min-h-[48px] justify-center">
+      <div className="flex items-center gap-2.5">
+        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"></div>
+        <span className="text-xs text-gray-500 font-medium w-6 flex-shrink-0">
+          IN
+        </span>
         <span className="text-sm font-mono font-medium text-gray-700">
           {inTime || "--:--"}
         </span>
       </div>
-      <div className="flex items-center gap-2">
-        <div className="w-1.5 h-1.5 rounded-full bg-orange-400"></div>
-        <span className="text-xs text-gray-500 w-6">OUT</span>
+      <div className="flex items-center gap-2.5">
+        <div className="w-1.5 h-1.5 rounded-full bg-orange-400 flex-shrink-0"></div>
+        <span className="text-xs text-gray-500 font-medium w-6 flex-shrink-0">
+          OUT
+        </span>
         <span className="text-sm font-mono font-medium text-gray-700">
           {outTime || "--:--"}
         </span>

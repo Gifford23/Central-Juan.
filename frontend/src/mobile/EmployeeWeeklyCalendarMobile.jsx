@@ -16,7 +16,11 @@ const fmtYMD = (d) => d.toISOString().slice(0, 10);
 // readable date formatter (e.g. October 6, 2025)
 const fmtLongDate = (dateStr) => {
   const d = new Date(dateStr);
-  return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  return d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 };
 
 // short header formatter e.g. Mon 14
@@ -33,7 +37,9 @@ const formatTime = (t) => {
   const min = parseInt(parts[1] || "0", 10);
   const ampm = hour >= 12 ? "pm" : "am";
   const h12 = hour % 12 === 0 ? 12 : hour % 12;
-  return min === 0 ? `${h12}${ampm}` : `${h12}:${String(min).padStart(2, "0")}${ampm}`;
+  return min === 0
+    ? `${h12}${ampm}`
+    : `${h12}:${String(min).padStart(2, "0")}${ampm}`;
 };
 
 // normalize various backend shapes into a map: { 'YYYY-MM-DD': scheduleObject }
@@ -51,7 +57,9 @@ const normalizeSchedules = (raw, employeeId) => {
   // handle multiple response shapes
   if (raw.schedules && typeof raw.schedules === "object") {
     const out = {};
-    Object.entries(raw.schedules).forEach(([k, v]) => (out[k] = normalizeItem(v)));
+    Object.entries(raw.schedules).forEach(
+      ([k, v]) => (out[k] = normalizeItem(v)),
+    );
     return out;
   }
 
@@ -84,7 +92,9 @@ const normalizeSchedules = (raw, employeeId) => {
       for (const emp of g.employees) {
         if (String(emp.employee_id) === String(employeeId) && emp.schedules) {
           const out = {};
-          Object.entries(emp.schedules).forEach(([k, v]) => (out[k] = normalizeItem(v)));
+          Object.entries(emp.schedules).forEach(
+            ([k, v]) => (out[k] = normalizeItem(v)),
+          );
           return out;
         }
       }
@@ -96,7 +106,10 @@ const normalizeSchedules = (raw, employeeId) => {
   return {};
 };
 
-export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 0 }) {
+export default function EmployeeWeeklyCalendarMobile({
+  employeeId,
+  weekOffset = 0,
+}) {
   const baseMonday = useMemo(() => {
     const monday = getMonday(new Date());
     monday.setDate(monday.getDate() + weekOffset * 7);
@@ -119,7 +132,9 @@ export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 
   const [error, setError] = useState("");
   const [selected, setSelected] = useState(null);
   const [viewMode, setViewMode] = useState("week");
-  const [selectedMonth, setSelectedMonth] = useState(() => new Date().toISOString().slice(0, 7));
+  const [selectedMonth, setSelectedMonth] = useState(() =>
+    new Date().toISOString().slice(0, 7),
+  );
 
   useEffect(() => {
     if (!employeeId) return;
@@ -190,7 +205,10 @@ export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 
       >
         <div className="font-medium text-sm leading-none">{dayNum}</div>
         {filled && (
-          <div className="text-[9px] truncate max-w-[70px]" title={shift.shift_name}>
+          <div
+            className="text-[9px] truncate max-w-[70px]"
+            title={shift.shift_name}
+          >
             {shift.shift_name}
           </div>
         )}
@@ -205,10 +223,9 @@ export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 
         <div className="text-sm font-semibold text-gray-700">
           {viewMode === "week" ? "This week" : ` Month of  `}
           {/* {viewMode === "week" ? "This week" : `Monthly — ${selectedMonth}`} */}
-
         </div>
 
-      <div className="flex gap-2 items-center ">
+        <div className="flex gap-2 items-center ">
           {viewMode === "month" && (
             <input
               type="month"
@@ -220,7 +237,9 @@ export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 
           )}
 
           <button
-            onClick={() => setViewMode((p) => (p === "week" ? "month" : "week"))}
+            onClick={() =>
+              setViewMode((p) => (p === "week" ? "month" : "week"))
+            }
             className="px-2 py-1 text-xs text-white bg-blue-600 rounded-md hover:bg-blue-700"
           >
             {viewMode === "week" ? "View Month" : "View Week"}
@@ -238,8 +257,10 @@ export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 
                 return (
                   <div
                     key={d}
-                    className={`text-center text-xs font-medium pb-1 ${
-                      isToday ? "text-blue-600" : "text-gray-600"
+                    className={`text-center text-xs font-medium pb-1 rounded ${
+                      isToday
+                        ? "text-white bg-green-600 shadow-sm"
+                        : "text-gray-600"
                     }`}
                   >
                     {headerLabel(d)}
@@ -251,22 +272,35 @@ export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 
             <div className="grid grid-cols-7 gap-2 mt-2">
               {days.map((d) => {
                 const s = schedules[d];
+                const isToday = todayYMD === d;
                 if (!s) {
                   return (
                     <div
                       key={d}
-                      className="flex items-center justify-center h-12 text-xs text-gray-400 border border-gray-100 rounded-lg bg-gray-50"
+                      className={`flex items-center justify-center h-12 text-xs border border-gray-100 rounded-lg ${
+                        isToday
+                          ? "text-green-700 border-green-300 bg-green-50 font-semibold"
+                          : "text-gray-400 bg-gray-50"
+                      }`}
                     >
                       —
                     </div>
                   );
                 }
-                const bgStyle = { background: colorFor(s.work_time_id), borderRadius: 10, color: "#fff" };
+                const bgStyle = {
+                  background: isToday
+                    ? "linear-gradient(90deg, #10b981, #059669)"
+                    : colorFor(s.work_time_id),
+                  borderRadius: 10,
+                  color: "#fff",
+                };
                 return (
                   <button
                     key={d}
                     onClick={() => setSelected({ date: d, shift: s })}
-                    className="flex flex-col items-center justify-center h-12 p-2 truncate shadow-sm"
+                    className={`flex flex-col items-center justify-center h-12 p-2 truncate shadow-sm ${
+                      isToday ? "ring-2 ring-green-400 ring-offset-1" : ""
+                    }`}
                     style={bgStyle}
                     title={`${s.shift_name || s.label || "Shift"} ${s.start_time || ""}-${s.end_time || ""}`}
                   >
@@ -275,7 +309,8 @@ export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 
                     </div>
                     {(s.start_time || s.end_time) && (
                       <div className="text-[11px] truncate max-w-[80px]">
-                        {(s.start_time || "") + (s.end_time ? ` - ${s.end_time}` : "")}
+                        {(s.start_time || "") +
+                          (s.end_time ? ` - ${s.end_time}` : "")}
                       </div>
                     )}
                   </button>
@@ -283,7 +318,9 @@ export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 
               })}
             </div>
 
-            <div className="mt-3 text-xs text-gray-500">Tap a shift for details.</div>
+            <div className="mt-3 text-xs text-gray-500">
+              Tap a shift for details.
+            </div>
           </>
         )}
 
@@ -302,7 +339,9 @@ export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 
                 const year = Number(yearStr);
                 const month = Number(monthStr);
                 if (!year || !month) {
-                  return Array.from({ length: 35 }, (_, i) => <DayCellEmpty keyName={`m-empty-${i}`} />);
+                  return Array.from({ length: 35 }, (_, i) => (
+                    <DayCellEmpty keyName={`m-empty-${i}`} />
+                  ));
                 }
 
                 const firstDay = new Date(year, month - 1, 1);
@@ -317,18 +356,30 @@ export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 
                   const dayNum = i + 1;
                   const dateStr = `${selectedMonth}-${String(dayNum).padStart(2, "0")}`;
                   const s = schedules[dateStr];
-                  return <MonthDayCell key={dateStr} dateStr={dateStr} dayNum={dayNum} shift={s} />;
+                  return (
+                    <MonthDayCell
+                      key={dateStr}
+                      dateStr={dateStr}
+                      dayNum={dayNum}
+                      shift={s}
+                    />
+                  );
                 });
 
                 const totalCells = blanks.length + dayCells.length;
-                const padCount = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
-                const pads = Array.from({ length: padCount }, (_, i) => <DayCellEmpty keyName={`pad-${i}`} />);
+                const padCount =
+                  totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+                const pads = Array.from({ length: padCount }, (_, i) => (
+                  <DayCellEmpty keyName={`pad-${i}`} />
+                ));
 
                 return [...blanks, ...dayCells, ...pads];
               })()}
             </div>
 
-            <div className="mt-3 text-xs text-gray-500">Tap a day to view shift details.</div>
+            <div className="mt-3 text-xs text-gray-500">
+              Tap a day to view shift details.
+            </div>
           </>
         )}
       </div>
@@ -355,7 +406,9 @@ export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 
                 <div className="text-lg font-semibold">
                   {selected.shift.shift_name || selected.shift.label}
                 </div>
-                <div className="text-xs opacity-90">{fmtLongDate(selected.date)}</div>
+                <div className="text-xs opacity-90">
+                  {fmtLongDate(selected.date)}
+                </div>
               </div>
               <button
                 onClick={() => setSelected(null)}
@@ -367,25 +420,28 @@ export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 
 
             {/* Content */}
             <div className="p-5 text-sm text-gray-700 space-y-4">
-                <div className="flex flex-col items-center justify-center mt-4 mb-4">
-                  <div className="text-lg font-semibold text-gray-800 mb-1 flex items-center gap-2">
-                    <span>Shift Schedule</span>
-                  </div>
+              <div className="flex flex-col items-center justify-center mt-4 mb-4">
+                <div className="text-lg font-semibold text-gray-800 mb-1 flex items-center gap-2">
+                  <span>Shift Schedule</span>
+                </div>
                 <div
                   className="text-2xl font-bold tracking-wide"
                   style={{
                     color: `hsl(${(parseInt(String(selected.shift.work_time_id || 0).replace(/\D/g, "")) * 137) % 360} 70% 45%)`,
                   }}
                 >
-                    {selected.shift.start_time || "—"}
-                    {selected.shift.end_time ? ` - ${selected.shift.end_time}` : ""}
-                  </div>
+                  {selected.shift.start_time || "—"}
+                  {selected.shift.end_time
+                    ? ` - ${selected.shift.end_time}`
+                    : ""}
                 </div>
-
+              </div>
 
               {selected.shift.description && (
                 <div>
-                  <div className="font-medium text-gray-800 mb-1">📝 Notes:</div>
+                  <div className="font-medium text-gray-800 mb-1">
+                    📝 Notes:
+                  </div>
                   <div className="text-gray-600 leading-snug">
                     {selected.shift.description}
                   </div>
@@ -409,7 +465,6 @@ export default function EmployeeWeeklyCalendarMobile({ employeeId, weekOffset = 
           </div>
         </div>
       )}
-
     </div>
   );
 }
