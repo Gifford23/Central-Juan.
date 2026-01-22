@@ -173,13 +173,13 @@ function EmployeeMobileDashboard() {
               </label>
 
               <div className="flex-1 pt-1">
-                <div className="flex items-center gap-25 mb-3">
+                <div className="flex items-center gap-2 sm:gap-3 mb-3">
                   <h1 className="text-xl font-bold text-white">
                     {employeeData.first_name} {employeeData.middle_name}{" "}
                     {employeeData.last_name}
                   </h1>
-                  {/* Professional On Duty Badge */}
-                  <div className="px-2 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-bold rounded-full shadow-md border border-green-400">
+                  {/* Professional On Duty Badge - Responsive */}
+                  <div className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-[10px] sm:text-xs font-bold rounded-full shadow-md border border-green-400">
                     ON DUTY
                   </div>
                 </div>
