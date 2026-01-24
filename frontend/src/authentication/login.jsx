@@ -106,7 +106,7 @@ export default function Login() {
     );
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-sky-100 via-white to-sky-200">
+    <div className="min-h-screen flex flex-col md:flex-row bg-linear-to-br from-sky-100 via-white to-sky-200">
       {/* LEFT - Branding / illustration */}
       <motion.div
         initial={{ opacity: 0, x: -40 }}
@@ -220,7 +220,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full inline-flex items-center justify-center gap-3 py-3 rounded-lg bg-gradient-to-r from-sky-600 to-indigo-600 text-white font-semibold shadow-md hover:scale-[1.01] transition disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full inline-flex items-center justify-center gap-3 py-3 rounded-lg bg-linear-to-r from-sky-600 to-indigo-600 text-white font-semibold shadow-md hover:scale-[1.01] transition disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>

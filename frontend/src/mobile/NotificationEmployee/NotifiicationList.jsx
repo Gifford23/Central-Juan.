@@ -17,6 +17,7 @@ import {
   Timer,
 } from "lucide-react";
 
+// --- Helper Functions ---
 const formatDate = (dateStr) => {
   if (!dateStr) return "—";
   const d = new Date(dateStr);
@@ -39,17 +40,17 @@ const formatTime = (time) => {
   });
 };
 
-// Helper functions for elegant design
+// --- Icon & Color Helpers ---
 const getNotificationIcon = (type) => {
   switch (type) {
     case "Overtime":
-      return <Timer className="w-4 h-4" />;
+      return <Timer className="w-5 h-5" />;
     case "Leave":
-      return <Calendar className="w-4 h-4" />;
+      return <Calendar className="w-5 h-5" />;
     case "Late Attendance":
-      return <Clock className="w-4 h-4" />;
+      return <Clock className="w-5 h-5" />;
     default:
-      return <Bell className="w-4 h-4" />;
+      return <Bell className="w-5 h-5" />;
   }
 };
 
@@ -67,24 +68,24 @@ const getStatusIcon = (status) => {
 const getTypeColor = (type) => {
   switch (type) {
     case "Overtime":
-      return "bg-blue-50 border-blue-200 text-blue-700";
+      return "bg-blue-100 text-blue-700 border-blue-200";
     case "Leave":
-      return "bg-green-50 border-green-200 text-green-700";
+      return "bg-green-100 text-green-700 border-green-200";
     case "Late Attendance":
-      return "bg-orange-50 border-orange-200 text-orange-700";
+      return "bg-orange-100 text-orange-700 border-orange-200";
     default:
-      return "bg-purple-50 border-purple-200 text-purple-700";
+      return "bg-purple-100 text-purple-700 border-purple-200";
   }
 };
 
 const getStatusColor = (status) => {
   switch (status) {
     case "Approved":
-      return "bg-green-100 text-green-800 border-green-300";
+      return "bg-green-50 text-green-700 border-green-200";
     case "Rejected":
-      return "bg-red-100 text-red-800 border-red-300";
+      return "bg-red-50 text-red-700 border-red-200";
     default:
-      return "bg-yellow-100 text-yellow-800 border-yellow-300";
+      return "bg-amber-50 text-amber-700 border-amber-200";
   }
 };
 
@@ -92,6 +93,8 @@ const NotificationList = () => {
   const location = useLocation();
   const { user } = useSession(); // session fallback
   const state = location.state || {};
+
+  // Robust fallback logic for Employee ID
   const candidateEmployeeId =
     state.employeeId ||
     state.employee_id ||
@@ -212,6 +215,8 @@ const NotificationList = () => {
       text: "This action cannot be undone.",
       icon: "warning",
       showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, delete",
       cancelButtonText: "Cancel",
     });
@@ -248,12 +253,17 @@ const NotificationList = () => {
 
   if (!employeeId) {
     return (
-      <div className="flex flex-col w-full h-screen items-center justify-center p-4">
-        <div className="max-w-md text-center bg-white p-6 rounded shadow">
-          <h3 className="text-lg font-semibold mb-2">No employee found</h3>
+      <div className="flex flex-col w-full h-screen items-center justify-center p-4 bg-gray-50">
+        <div className="max-w-md text-center bg-white p-8 rounded-xl shadow border border-gray-100">
+          <div className="p-3 bg-red-100 rounded-full w-fit mx-auto mb-4 text-red-600">
+            <AlertCircle size={32} />
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">
+            No Employee Found
+          </h3>
           <p className="text-sm text-gray-600">
-            We couldn't determine which employee's notifications to show. Make
-            sure you navigated from the dashboard or that you're logged in.
+            We couldn't determine which employee's notifications to show. Please
+            ensure you are logged in correctly.
           </p>
         </div>
       </div>
@@ -261,204 +271,241 @@ const NotificationList = () => {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+    <div className="min-h-screen bg-gray-50 pb-24">
+      {" "}
+      {/* Extra padding bottom for mobile nav */}
+      {/* --- Sticky Header --- */}
+      <div className="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm safe-area-inset-top">
+        <div className="max-w-5xl mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-              <h1 className="text-lg sm:text-xl font-bold text-gray-900">
-                Notifications
-              </h1>
-            </div>
-            <div className="flex items-center space-x-1 sm:space-x-2">
-              <div className="text-xs sm:text-sm text-gray-500">
-                {filteredItems.length}{" "}
-                {filteredItems.length === 1 ? "item" : "items"}
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-50 text-blue-600 rounded-full">
+                <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
+              </div>
+              <div>
+                <h1 className="text-lg sm:text-xl font-bold text-gray-900 leading-none">
+                  Notifications
+                </h1>
+                <p className="text-xs text-gray-500 font-medium mt-0.5">
+                  {filteredItems.length}{" "}
+                  {filteredItems.length === 1 ? "Update" : "Updates"}
+                </p>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Action Bar */}
+        <div className="bg-gray-50/50 border-t border-gray-100 px-2 py-2">
+          <div className="max-w-5xl mx-auto">
+            <NotificationActionButtonEmp
+              selectedIds={selectedIds}
+              onDeleteSelected={handleDeleteSelected}
+              onSelectAll={onSelectAll}
+              onDeselectAll={onDeselectAll}
+              filterType={filterType}
+              setFilterType={setFilterType}
+              filterStatus={filterStatus}
+              setFilterStatus={setFilterStatus}
+            />
+          </div>
+        </div>
       </div>
-
-      {/* Action Bar */}
-      <NotificationActionButtonEmp
-        selectedIds={selectedIds}
-        onDeleteSelected={handleDeleteSelected}
-        onSelectAll={onSelectAll}
-        onDeselectAll={onDeselectAll}
-        filterType={filterType}
-        setFilterType={setFilterType}
-        filterStatus={filterStatus}
-        setFilterStatus={setFilterStatus}
-      />
-
-      {/* Content */}
-      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
+      {/* --- Main Content --- */}
+      <div className="max-w-5xl mx-auto px-3 sm:px-6 py-4">
+        {/* Loading State */}
         {loading && (
-          <div className="flex flex-col items-center justify-center py-8 sm:py-12">
-            <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-blue-600"></div>
-            <p className="mt-2 sm:mt-4 text-sm sm:text-base text-gray-500">
-              Loading notifications...
-            </p>
+          <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+            <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent mb-3"></div>
+            <p className="text-sm font-medium">Syncing notifications...</p>
           </div>
         )}
 
+        {/* Empty State */}
         {!loading && filteredItems.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-8 sm:py-12">
-            <div className="bg-gray-100 rounded-full p-3 sm:p-4 mb-3 sm:mb-4">
-              <Bell className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
+          <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+            <div className="bg-white p-6 rounded-full shadow-sm mb-4">
+              <Bell className="w-12 h-12 text-gray-300" />
             </div>
-            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-              No notifications found
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">
+              All caught up!
             </h3>
-            <p className="text-sm text-gray-500 text-center px-4">
+            <p className="text-sm text-gray-500 max-w-xs mx-auto">
               {filterType !== "All" || filterStatus !== "All"
-                ? "Try adjusting your filters to see more notifications."
-                : "You're all caught up! No new notifications."}
+                ? "No records match your current filters."
+                : "You have no new notifications at the moment."}
             </p>
           </div>
         )}
 
-        {/* Responsive Notification Cards */}
-        <div className="space-y-3 sm:space-y-4 pb-6 sm:pb-8">
+        {/* List of Notifications */}
+        <div className="space-y-4">
           {filteredItems.map((item) => (
             <div
               key={item._localId}
-              className="bg-white rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border border-gray-100 overflow-hidden"
+              className={`group relative bg-white rounded-xl shadow-sm border transition-all duration-200 overflow-hidden
+                ${
+                  selectedIds.has(item._localId)
+                    ? "border-blue-400 ring-1 ring-blue-100 bg-blue-50/10"
+                    : "border-gray-200 hover:border-blue-300 hover:shadow-md"
+                }
+              `}
             >
-              {/* Card Header */}
-              <div className="bg-linear-to-r from-gray-50 to-gray-100 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center space-x-2 sm:space-x-3">
-                    <input
-                      type="checkbox"
-                      checked={selectedIds.has(item._localId)}
-                      onChange={() => toggleSelect(item._localId)}
-                      className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:ring-2"
-                    />
-                    <div className="flex items-center space-x-2 sm:space-x-2">
-                      <div
-                        className={`p-1.5 sm:p-2 rounded-lg ${getTypeColor(item.request_type)}`}
+              <div className="p-3 sm:p-5 flex items-start gap-3 sm:gap-4">
+                {/* Selection Checkbox */}
+                <div className="pt-1 flex-shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.has(item._localId)}
+                    onChange={() => toggleSelect(item._localId)}
+                    className="w-5 h-5 sm:w-4 sm:h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer"
+                  />
+                </div>
+
+                {/* Content Container - Use min-w-0 to allow flex children to shrink/wrap */}
+                <div className="flex-1 min-w-0">
+                  {/* Header Row: Flex Wrap Enabled */}
+                  <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-2 max-w-full">
+                      <span
+                        className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg ${getTypeColor(item.request_type)}`}
                       >
                         {getNotificationIcon(item.request_type)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm sm:text-base font-semibold text-gray-900 truncate">
-                          {item.request_type || "Notification"}
-                        </div>
-                        <div className="text-xs sm:text-sm text-gray-500 truncate">
-                          {formatDate(item.date_display)} •{" "}
-                          {item.employee_name || item.employee_id}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-1 sm:space-x-2">
-                    <div
-                      className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-medium border ${getStatusColor(item.status)}`}
-                    >
-                      <div className="flex items-center space-x-1">
-                        {getStatusIcon(item.status)}
-                        <span className="hidden sm:inline">
-                          {item.status || "Pending"}
+                      </span>
+                      <div className="min-w-0">
+                        {/* Title: Removed truncate, added break-words */}
+                        <h4 className="text-sm sm:text-base font-bold text-gray-900 leading-tight break-words">
+                          {item.request_type} Request
+                        </h4>
+                        <span className="text-[11px] text-gray-400 font-medium sm:hidden">
+                          {formatDate(item.date_display)}
                         </span>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
 
-              {/* Card Content */}
-              <div className="px-3 sm:px-6 py-3 sm:py-4">
-                {/* Type-specific content */}
-                {item.request_type === "Late Attendance" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
-                    <div className="bg-blue-50 rounded-lg p-3 sm:p-4">
-                      <div className="text-xs sm:text-sm font-medium text-blue-700 mb-1">
-                        Morning Shift
-                      </div>
-                      <div className="text-sm sm:text-base text-gray-900">
-                        {formatTime(item.current_time_in_morning)} /{" "}
-                        {formatTime(item.current_time_out_morning)}
-                      </div>
-                    </div>
-                    <div className="bg-orange-50 rounded-lg p-3 sm:p-4">
-                      <div className="text-xs sm:text-sm font-medium text-orange-700 mb-1">
-                        Afternoon Shift
-                      </div>
-                      <div className="text-sm sm:text-base text-gray-900">
-                        {formatTime(item.current_time_in_afternoon)} /{" "}
-                        {formatTime(item.current_time_out_afternoon)}
-                      </div>
+                    {/* Status Badge: Won't get cut off, moves to new line if needed */}
+                    <div
+                      className={`
+                            inline-flex items-center gap-1.5 px-2.5 py-1 
+                            rounded-full text-xs font-semibold border whitespace-nowrap
+                            ${getStatusColor(item.status)}
+                        `}
+                    >
+                      {getStatusIcon(item.status)}
+                      <span>{item.status || "Pending"}</span>
                     </div>
                   </div>
-                )}
 
-                {item.request_type === "Overtime" && (
-                  <div className="bg-blue-50 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="text-xs sm:text-sm font-medium text-blue-700 mb-1">
-                          Requested Hours
-                        </div>
-                        <div className="text-lg sm:text-xl font-bold text-gray-900">
-                          {item.hours_requested
-                            ? `${item.hours_requested}h ${item.minutes_requested || 0}m`
-                            : "N/A"}
-                        </div>
-                      </div>
-                      <Timer className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 shrink-0" />
-                    </div>
+                  {/* Metadata Row (Desktop) */}
+                  <div className="hidden sm:flex items-center gap-3 text-xs text-gray-500 font-medium mb-3">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3.5 h-3.5" />
+                      {formatDate(item.date_display)}
+                    </span>
+                    {item.employee_name && (
+                      <span className="flex items-center gap-1">
+                        <User className="w-3.5 h-3.5" />
+                        {item.employee_name}
+                      </span>
+                    )}
                   </div>
-                )}
 
-                {item.request_type === "Leave" && (
-                  <div className="bg-green-50 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                      <div>
-                        <div className="text-xs sm:text-sm font-medium text-green-700 mb-1">
-                          From
+                  {/* Dynamic Data Content */}
+                  <div className="bg-gray-50 rounded-lg border border-gray-100 p-3 sm:p-4 mt-2 text-sm w-full">
+                    {/* Late Attendance Details - STACKED on mobile (grid-cols-1) */}
+                    {item.request_type === "Late Attendance" && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
+                        <div className="bg-white p-2 rounded border border-gray-100 shadow-sm w-full">
+                          <span className="text-[10px] uppercase font-bold text-blue-600 tracking-wide block mb-1">
+                            Morning Shift
+                          </span>
+                          {/* break-words ensures time doesn't overflow */}
+                          <div className="font-mono text-gray-800 font-medium break-words text-xs sm:text-sm">
+                            {formatTime(item.current_time_in_morning)}{" "}
+                            <span className="text-gray-400 mx-1">-</span>{" "}
+                            {formatTime(item.current_time_out_morning)}
+                          </div>
                         </div>
-                        <div className="text-sm sm:text-base font-semibold text-gray-900">
-                          {formatDate(item.date_from)}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs sm:text-sm font-medium text-green-700 mb-1">
-                          Until
-                        </div>
-                        <div className="text-sm sm:text-base font-semibold text-gray-900">
-                          {formatDate(item.date_until)}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-green-200">
-                      <div className="flex items-center justify-between">
-                        <div className="text-xs sm:text-sm font-medium text-green-700">
-                          Total Days
-                        </div>
-                        <div className="text-lg sm:text-xl font-bold text-gray-900">
-                          {item.total_days || 1}
+                        <div className="bg-white p-2 rounded border border-gray-100 shadow-sm w-full">
+                          <span className="text-[10px] uppercase font-bold text-orange-600 tracking-wide block mb-1">
+                            Afternoon Shift
+                          </span>
+                          <div className="font-mono text-gray-800 font-medium break-words text-xs sm:text-sm">
+                            {formatTime(item.current_time_in_afternoon)}{" "}
+                            <span className="text-gray-400 mx-1">-</span>{" "}
+                            {formatTime(item.current_time_out_afternoon)}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                )}
+                    )}
 
-                {/* Reason Section */}
-                <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
-                  <div className="flex items-start space-x-2 sm:space-x-3">
-                    <FileText className="w-4 h-4 text-gray-500 mt-0.5 shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                        Reason / Details
+                    {/* Overtime Details */}
+                    {item.request_type === "Overtime" && (
+                      <div className="flex items-center gap-3 bg-white p-3 rounded border border-gray-100 shadow-sm">
+                        <div className="p-2 bg-blue-100 text-blue-600 rounded-full shrink-0">
+                          <Timer className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 font-medium uppercase">
+                            Duration
+                          </p>
+                          <p className="text-lg font-bold text-gray-900">
+                            {item.hours_requested
+                              ? `${item.hours_requested} hrs`
+                              : "0 hrs"}
+                            {item.minutes_requested
+                              ? ` ${item.minutes_requested} mins`
+                              : ""}
+                          </p>
+                        </div>
                       </div>
-                      <div className="text-sm sm:text-base text-gray-900 leading-relaxed break-words">
-                        {item.reason || "No reason provided"}
+                    )}
+
+                    {/* Leave Details - STACKED on mobile */}
+                    {item.request_type === "Leave" && (
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div className="bg-white p-2 rounded border border-gray-100 shadow-sm">
+                          <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wide block mb-1">
+                            Start Date
+                          </span>
+                          <div className="font-medium text-gray-800">
+                            {formatDate(item.date_from)}
+                          </div>
+                        </div>
+                        <div className="bg-white p-2 rounded border border-gray-100 shadow-sm">
+                          <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wide block mb-1">
+                            End Date
+                          </span>
+                          <div className="font-medium text-gray-800">
+                            {formatDate(item.date_until)}
+                          </div>
+                        </div>
+                        <div className="bg-green-50 p-2 rounded border border-green-100 flex items-center justify-center sm:justify-start">
+                          <span className="text-sm font-semibold text-green-700">
+                            {item.total_days || 1} Total Day(s)
+                          </span>
+                        </div>
                       </div>
-                    </div>
+                    )}
+
+                    {/* Reason Section - Common for all - FORCE WRAP */}
+                    {item.reason && (
+                      <div className="mt-3 pt-3 border-t border-gray-200">
+                        <div className="flex gap-2">
+                          <FileText className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            {" "}
+                            {/* min-w-0 forces wrapping inside flex */}
+                            <span className="text-xs font-semibold text-gray-500 block mb-1">
+                              Reason / Note:
+                            </span>
+                            <p className="text-gray-700 italic text-sm whitespace-pre-wrap break-words">
+                              "{item.reason}"
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
