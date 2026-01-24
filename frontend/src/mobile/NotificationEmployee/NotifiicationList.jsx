@@ -128,7 +128,6 @@ const NotificationList = () => {
     } else {
       setItems([]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [employeeId]);
 
   const fetchRequests = async (empId) => {
@@ -262,7 +261,7 @@ const NotificationList = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
@@ -330,7 +329,7 @@ const NotificationList = () => {
               className="bg-white rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border border-gray-100 overflow-hidden"
             >
               {/* Card Header */}
-              <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+              <div className="bg-linear-to-r from-gray-50 to-gray-100 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     <input
@@ -410,7 +409,7 @@ const NotificationList = () => {
                             : "N/A"}
                         </div>
                       </div>
-                      <Timer className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 flex-shrink-0" />
+                      <Timer className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 shrink-0" />
                     </div>
                   </div>
                 )}
@@ -451,7 +450,7 @@ const NotificationList = () => {
                 {/* Reason Section */}
                 <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
                   <div className="flex items-start space-x-2 sm:space-x-3">
-                    <FileText className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                    <FileText className="w-4 h-4 text-gray-500 mt-0.5 shrink-0" />
                     <div className="flex-1 min-w-0">
                       <div className="text-xs sm:text-sm font-medium text-gray-700 mb-1">
                         Reason / Details

@@ -801,7 +801,7 @@ const Payroll = () => {
                   </div>
                   <div className="Glb-table-contentoverflow">
                     <div className="Glb-table-contentoverflow_contentscroll">
-                      <div className="P-Employee-name payroll-content-textelipis w-full text-left text-[16px] border-b-[1px] font-bold mb-1">
+                      <div className="P-Employee-name payroll-content-textelipis w-full text-left text-[16px] border-b font-bold mb-1">
                         {payroll.name}
                       </div>
                       <div className="P-Employee-ID w-full text-left text-[13px] flex">
@@ -836,7 +836,7 @@ const Payroll = () => {
                   </div>
                   <div className="Glb-table-contentoverflow">
                     <div className="flex flex-col items-center justify-center Glb-table-contentoverflow_contentscroll">
-                      <div className="From-to-date border-b-[1px] flex flex-row gap-x-1 mb-1  w-full justify-between">
+                      <div className="From-to-date border-b flex flex-row gap-x-1 mb-1  w-full justify-between">
                         <strong>{formatDate(payroll.date_from)}</strong>
                         {/* <span> TO </span> */}
                         {/* <MoveHorizontal /> */}

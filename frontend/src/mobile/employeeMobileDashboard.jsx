@@ -116,7 +116,7 @@ function EmployeeMobileDashboard() {
 
   if (errorMessage) {
     return (
-      <div className="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-red-50 to-red-100">
+      <div className="flex items-center justify-center min-h-screen px-4 bg-linear-to-br from-red-50 to-red-100">
         <div className="w-full max-w-md p-6 bg-white rounded-2xl shadow-lg">
           <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
             <Activity className="w-6 h-6 text-red-600" />
@@ -129,7 +129,7 @@ function EmployeeMobileDashboard() {
 
   if (!employeeData) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50">
         <div className="text-center">
           <div className="w-16 h-16 mx-auto mb-4 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
           <p className="text-gray-600 font-medium">Loading your dashboard...</p>
@@ -139,15 +139,15 @@ function EmployeeMobileDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pb-8">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 pb-8">
       <div className="w-full max-w-4xl mx-auto px-4 pt-6">
         {/* Header Card with Profile */}
-        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl shadow-xl overflow-hidden mb-6">
+        <div className="bg-linear-to-br from-blue-600 to-indigo-700 rounded-3xl shadow-xl overflow-hidden mb-6">
           <div className="p-6 pb-4">
             <div className="flex items-start gap-4">
               <label
                 htmlFor="image-upload"
-                className="relative flex-shrink-0 cursor-pointer group"
+                className="relative shrink-0 cursor-pointer group"
               >
                 {employeeData.image ? (
                   <img
@@ -179,7 +179,7 @@ function EmployeeMobileDashboard() {
                     {employeeData.last_name}
                   </h1>
                   {/* Professional On Duty Badge - Responsive */}
-                  <div className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-[10px] sm:text-xs font-bold rounded-full shadow-md border border-green-400">
+                  <div className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-linear-to-r from-green-500 to-green-600 text-white text-[10px] sm:text-xs font-bold rounded-full shadow-md border border-green-400">
                     ON DUTY
                   </div>
                 </div>
@@ -324,7 +324,7 @@ function EmployeeMobileDashboard() {
 
 const DetailItem = ({ icon, label, value, statusBadge }) => (
   <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
-    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex-shrink-0">
+    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 text-blue-600 shrink-0">
       {icon}
     </div>
     <div className="flex-1 min-w-0">
