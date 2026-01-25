@@ -353,7 +353,7 @@ const NotificationList = () => {
             >
               <div className="p-3 sm:p-5 flex items-start gap-3 sm:gap-4">
                 {/* Selection Checkbox */}
-                <div className="pt-1 flex-shrink-0">
+                <div className="pt-1 shrink-0">
                   <input
                     type="checkbox"
                     checked={selectedIds.has(item._localId)}
@@ -368,7 +368,7 @@ const NotificationList = () => {
                   <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
                     <div className="flex items-center gap-2 max-w-full">
                       <span
-                        className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg ${getTypeColor(item.request_type)}`}
+                        className={`shrink-0 flex items-center justify-center w-8 h-8 rounded-lg ${getTypeColor(item.request_type)}`}
                       >
                         {getNotificationIcon(item.request_type)}
                       </span>
