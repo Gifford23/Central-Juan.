@@ -55,7 +55,7 @@ const EmployeeDashboard = () => {
                 className="attendance-dashboard-box_v3 nb-dashboard-bg group relative cursor-pointer w-full max-w-sm min-w-[300px]"
                 style={{ borderRadius: 15 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r translate-y-[100%] group-hover:translate-y-[0%] transition-transform duration-300 Glc-dashboard-newdesign-bgcolor" />
+                <div className="absolute inset-0 bg-linear-to-r translate-y-[100%] group-hover:translate-y-[0%] transition-transform duration-300 Glc-dashboard-newdesign-bgcolor" />
                 <div className="absolute z-10 transition-transform duration-300 w-fit -bottom-8 -right-35 text-slate-200 group-hover:rotate-12 Glc-dashboard-newdesign-iconcolor">
                   <Users size={"70%"} strokeWidth={1} />
                 </div>
@@ -75,7 +75,7 @@ const EmployeeDashboard = () => {
                 className="attendance-dashboard-box_v3 nb-dashboard-bg group relative cursor-pointer w-full max-w-sm min-w-[300px]"
                 style={{ borderRadius: 15 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r translate-y-[100%] group-hover:translate-y-[0%] transition-transform duration-300 Glc-dashboard-newdesign-bgcolor" />
+                <div className="absolute inset-0 bg-linear-to-r translate-y-[100%] group-hover:translate-y-[0%] transition-transform duration-300 Glc-dashboard-newdesign-bgcolor" />
                 <div className="absolute z-10 transition-transform duration-300 w-fit -bottom-8 -right-35 text-slate-200 group-hover:rotate-12 Glc-dashboard-newdesign-iconcolor">
                   <Briefcase size={"70%"} strokeWidth={1} />
                 </div>
@@ -95,7 +95,7 @@ const EmployeeDashboard = () => {
                 className="attendance-dashboard-box_v3 nb-dashboard-bg group relative cursor-pointer w-full max-w-sm min-w-[300px]"
                 style={{ borderRadius: 15 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r translate-y-[100%] group-hover:translate-y-[0%] transition-transform duration-300 Glc-dashboard-newdesign-bgcolor" />
+                <div className="absolute inset-0 bg-linear-to-r translate-y-[100%] group-hover:translate-y-[0%] transition-transform duration-300 Glc-dashboard-newdesign-bgcolor" />
                 <div className="absolute z-10 transition-transform duration-300 w-fit -bottom-8 -right-35 text-slate-200 group-hover:rotate-12 Glc-dashboard-newdesign-iconcolor">
                   <Building2 size={"70%"} strokeWidth={1} />
                 </div>
@@ -115,7 +115,7 @@ const EmployeeDashboard = () => {
                 className="attendance-dashboard-box_v3 nb-dashboard-bg group relative cursor-pointer w-full max-w-sm min-w-[300px]"
                 style={{ borderRadius: 15 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r translate-y-[100%] group-hover:translate-y-[0%] transition-transform duration-300 Glc-dashboard-newdesign-bgcolor" />
+                <div className="absolute inset-0 bg-linear-to-r translate-y-[100%] group-hover:translate-y-[0%] transition-transform duration-300 Glc-dashboard-newdesign-bgcolor" />
                 <div className="absolute z-10 transition-transform duration-300 w-fit -bottom-8 -right-35 text-slate-200 group-hover:rotate-12 Glc-dashboard-newdesign-iconcolor">
                   <Fingerprint size={"70%"} strokeWidth={1} />
                 </div>

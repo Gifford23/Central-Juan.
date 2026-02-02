@@ -91,7 +91,7 @@ export default function DepartmentsAndPositions() {
     setPositionsLoading((prev) => ({ ...prev, [departmentId]: true }));
     try {
       const res = await fetch(
-        `${BASE_URL}/departments/positions/positions.php?department_id=${departmentId}`
+        `${BASE_URL}/departments/positions/positions.php?department_id=${departmentId}`,
       );
       const data = await res.json();
       setPositions((prev) => ({ ...prev, [departmentId]: data.data || [] }));
@@ -126,12 +126,20 @@ export default function DepartmentsAndPositions() {
       });
       const data = await res.json();
       if (data.success || data.status === "success") {
-        await Swal.fire("Success!", "Department saved successfully.", "success");
+        await Swal.fire(
+          "Success!",
+          "Department saved successfully.",
+          "success",
+        );
         setIsDepartmentModalOpen(false);
         setEditingDepartment(null);
         fetchDepartments();
       } else {
-        await Swal.fire("Error!", data.message || "Failed to save department.", "error");
+        await Swal.fire(
+          "Error!",
+          data.message || "Failed to save department.",
+          "error",
+        );
       }
     } catch {
       await Swal.fire("Error!", "Unable to save department.", "error");
@@ -154,9 +162,12 @@ export default function DepartmentsAndPositions() {
     if (!ret.isConfirmed) return;
 
     try {
-      const res = await fetch(`${BASE_URL}/departments/delete_department.php?id=${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `${BASE_URL}/departments/delete_department.php?id=${id}`,
+        {
+          method: "DELETE",
+        },
+      );
       const data = await res.json();
       if (data.status === "success") {
         await Swal.fire("Deleted!", "Department removed.", "success");
@@ -173,7 +184,8 @@ export default function DepartmentsAndPositions() {
     const payload = editingPosition
       ? {
           position_id: editingPosition.position_id,
-          new_position_id: newPosition.position_id || editingPosition.position_id,
+          new_position_id:
+            newPosition.position_id || editingPosition.position_id,
           position_name: newPosition.position_name,
           department_id: expandedDepartmentId,
         }
@@ -201,7 +213,11 @@ export default function DepartmentsAndPositions() {
         setEditingPosition(null);
         fetchPositions(expandedDepartmentId);
       } else {
-        await Swal.fire("Error!", data.message || "Failed to save position.", "error");
+        await Swal.fire(
+          "Error!",
+          data.message || "Failed to save position.",
+          "error",
+        );
       }
     } catch {
       await Swal.fire("Error!", "Server error saving position.", "error");
@@ -226,14 +242,18 @@ export default function DepartmentsAndPositions() {
     try {
       const res = await fetch(
         `${BASE_URL}/departments/positions/delete_positions.php?id=${position_id}`,
-        { method: "DELETE" }
+        { method: "DELETE" },
       );
       const data = await res.json();
       if (data.status === "success") {
         await Swal.fire("Deleted!", "Position removed.", "success");
         fetchPositions(expandedDepartmentId);
       } else {
-        await Swal.fire("Error!", data.message || "Failed to delete position.", "error");
+        await Swal.fire(
+          "Error!",
+          data.message || "Failed to delete position.",
+          "error",
+        );
       }
     } catch {
       await Swal.fire("Error!", "Server error deleting position.", "error");
@@ -244,18 +264,35 @@ export default function DepartmentsAndPositions() {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return departments;
     return departments.filter((d) =>
-      (d.department_name || "").toLowerCase().includes(q)
+      (d.department_name || "").toLowerCase().includes(q),
     );
   }, [departments, searchQuery]);
 
   const breadcrumbItems = [
-    !permLoading && permissions?.employee_list && { key: "dashboard", label: "Employee Lists", path: "/employees" },
-    !permLoading && permissions?.department && { key: "employees", label: "Departments", path: "/department" },
-    !permLoading && permissions?.branches && { key: "branches", label: "Branches", path: "/branches" },
+    !permLoading &&
+      permissions?.employee_list && {
+        key: "dashboard",
+        label: "Employee Lists",
+        path: "/employees",
+      },
+    !permLoading &&
+      permissions?.department && {
+        key: "employees",
+        label: "Departments",
+        path: "/department",
+      },
+    !permLoading &&
+      permissions?.branches && {
+        key: "branches",
+        label: "Branches",
+        path: "/branches",
+      },
   ].filter(Boolean);
 
   // --- NEW: calculate how much bottom padding we need ---
-  const expandedPositionsCount = expandedDepartmentId ? (positions[expandedDepartmentId]?.length || 0) : 0;
+  const expandedPositionsCount = expandedDepartmentId
+    ? positions[expandedDepartmentId]?.length || 0
+    : 0;
 
   // heuristics — tweak numbers if you want:
   // - small lists: normal padding
@@ -264,17 +301,21 @@ export default function DepartmentsAndPositions() {
   const bottomPaddingClass = isPositionModalOpen
     ? "pb-[260px]"
     : expandedPositionsCount > 10
-    ? "pb-[260px]"
-    : expandedPositionsCount > 5
-    ? "pb-[160px]"
-    : "pb-20";
+      ? "pb-[260px]"
+      : expandedPositionsCount > 5
+        ? "pb-[160px]"
+        : "pb-20";
 
   return (
-    <div className={`container flex flex-col gap-y-4 px-4 sm:px-6 transition-all duration-200 ${bottomPaddingClass}`}>
+    <div
+      className={`container flex flex-col gap-y-4 px-4 sm:px-6 transition-all duration-200 ${bottomPaddingClass}`}
+    >
       {/* Solid breadcrumb/header — not transparent */}
       <div className="sticky top-0 z-10 flex flex-col w-full pb-3 pl-0 sm:pl-5 border-b bg-white shadow-sm">
         <div className="py-3">
-          <span className="text-2xl font-semibold">Departments and Positions</span>
+          <span className="text-2xl font-semibold">
+            Departments and Positions
+          </span>
         </div>
         <div className="hidden sm:block">
           <Breadcrumbs items={breadcrumbItems} />
@@ -326,13 +367,18 @@ export default function DepartmentsAndPositions() {
       {/* Department List */}
       <div className="grid gap-3 p-3">
         {loading ? (
-          <div className="py-12 text-center text-gray-600">Loading departments...</div>
+          <div className="py-12 text-center text-gray-600">
+            Loading departments...
+          </div>
         ) : filteredDepartments.length === 0 ? (
-          <div className="py-8 text-center text-gray-600">No departments found.</div>
+          <div className="py-8 text-center text-gray-600">
+            No departments found.
+          </div>
         ) : (
           filteredDepartments.map((department) => {
             const deptPositions = positions[department.department_id] || [];
-            const isExpanded = expandedDepartmentId === department.department_id;
+            const isExpanded =
+              expandedDepartmentId === department.department_id;
             const deptLoading = !!positionsLoading[department.department_id];
 
             return (
@@ -362,11 +408,15 @@ export default function DepartmentsAndPositions() {
                       <IconButton
                         title="Delete"
                         variant="delete"
-                        onClick={() => handleDeleteDepartment(department.department_id)}
+                        onClick={() =>
+                          handleDeleteDepartment(department.department_id)
+                        }
                       />
                     )}
                     <button
-                      aria-label={isExpanded ? "Collapse positions" : "Expand positions"}
+                      aria-label={
+                        isExpanded ? "Collapse positions" : "Expand positions"
+                      }
                       onClick={() => handleViewPositions(department)}
                       className="p-2 rounded-md hover:bg-gray-100"
                     >
@@ -385,10 +435,16 @@ export default function DepartmentsAndPositions() {
                   <div
                     className="mt-3 p-4 bg-gray-50 rounded-xl border border-gray-200 shadow-sm"
                     // make the expanded area independently scrollable so long lists don't grow the page indefinitely
-                    style={{ maxHeight: "60vh", overflowY: "auto", paddingBottom: 20 }}
+                    style={{
+                      maxHeight: "60vh",
+                      overflowY: "auto",
+                      paddingBottom: 20,
+                    }}
                   >
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-bold text-gray-800">Positions for {department.department_name}</h3>
+                      <h3 className="font-bold text-gray-800">
+                        Positions for {department.department_name}
+                      </h3>
 
                       {!permLoading && permissions?.can_add && (
                         <Tooltip
@@ -398,7 +454,10 @@ export default function DepartmentsAndPositions() {
                             popper: {
                               sx: {
                                 [`&.${tooltipClasses.popper}[data-popper-placement*="bottom"] .${tooltipClasses.tooltip}`]:
-                                  { marginTop: "7px", backgroundColor: "#46494c" },
+                                  {
+                                    marginTop: "7px",
+                                    backgroundColor: "#46494c",
+                                  },
                               },
                             },
                           }}
@@ -418,7 +477,9 @@ export default function DepartmentsAndPositions() {
 
                     {/* Show loading text while positions are fetching for this dept */}
                     {deptLoading ? (
-                      <p className="text-center text-gray-500 py-3 italic">Loading positions...</p>
+                      <p className="text-center text-gray-500 py-3 italic">
+                        Loading positions...
+                      </p>
                     ) : (
                       <div className="flex flex-col gap-2">
                         {deptPositions.length > 0 ? (
@@ -445,14 +506,18 @@ export default function DepartmentsAndPositions() {
                                   <IconButton
                                     title="Delete"
                                     variant="delete"
-                                    onClick={() => handleDeletePosition(position.position_id)}
+                                    onClick={() =>
+                                      handleDeletePosition(position.position_id)
+                                    }
                                   />
                                 )}
                               </div>
                             </div>
                           ))
                         ) : (
-                          <p className="text-center text-gray-500 text-sm">No positions found.</p>
+                          <p className="text-center text-gray-500 text-sm">
+                            No positions found.
+                          </p>
                         )}
                       </div>
                     )}

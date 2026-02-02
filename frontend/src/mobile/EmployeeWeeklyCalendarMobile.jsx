@@ -273,7 +273,7 @@ export default function EmployeeWeeklyCalendarMobile({
                       key={d}
                       className={`text-center py-2 px-1 rounded-lg transition-all ${
                         isToday
-                          ? "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md"
+                          ? "bg-linear-to-r from-green-500 to-green-600 text-white shadow-md"
                           : "bg-gray-50 text-gray-700 border border-gray-200"
                       }`}
                     >

@@ -13,21 +13,32 @@ import {
 import Swal from "sweetalert2";
 import BASE_URL from "../../../backend/server/config";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+// Register ChartJS
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 const AttendanceDashboard = () => {
+  // --- State ---
   const [attendanceData, setAttendanceData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [onDutyCount, setOnDutyCount] = useState(0);
 
-  // Helpers
+  // --- Helpers ---
   const localYYYYMMDD = (date) =>
     `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
-      date.getDate()
+      date.getDate(),
     ).padStart(2, "0")}`;
 
   const parseYYYYMMDDToDate = (yyyyMmDd) => new Date(`${yyyyMmDd}T00:00`);
+
+  // Display date for the Header text
   const displayDateString = (date) =>
     date.toLocaleDateString("en-US", {
       weekday: "short",
@@ -52,15 +63,19 @@ const AttendanceDashboard = () => {
     return `${hour12}:${String(m).padStart(2, "0")} ${ampm}`;
   };
 
+  // --- Data Fetching ---
   const fetchAttendance = async () => {
     setLoading(true);
     try {
       const res = await fetch(`${BASE_URL}/attendance/attendance.php`);
       const data = await res.json();
-      if (data.success && Array.isArray(data.data)) setAttendanceData(data.data);
-      else throw new Error(data.message || "Failed to fetch attendance data");
+      if (data.success && Array.isArray(data.data)) {
+        setAttendanceData(data.data);
+      } else {
+        throw new Error(data.message || "Failed to fetch attendance data");
+      }
     } catch (err) {
-      Swal.fire("Error", err.message, "error");
+      console.error(err);
       setAttendanceData([]);
     } finally {
       setLoading(false);
@@ -71,9 +86,10 @@ const AttendanceDashboard = () => {
     fetchAttendance();
   }, []);
 
-  const selectedDate = localYYYYMMDD(currentDate);
+  // --- Filtering ---
+  const selectedDateStr = localYYYYMMDD(currentDate);
   const filteredAttendance = attendanceData.filter(
-    (a) => String(a.attendance_date || "").slice(0, 10) === selectedDate
+    (a) => String(a.attendance_date || "").slice(0, 10) === selectedDateStr,
   );
 
   useEffect(() => {
@@ -87,8 +103,8 @@ const AttendanceDashboard = () => {
   const summary = (() => {
     let earlyM = 0,
       onTimeM = 0,
-      lateM = 0,
-      earlyA = 0,
+      lateM = 0;
+    let earlyA = 0,
       onTimeA = 0,
       lateA = 0;
 
@@ -106,16 +122,10 @@ const AttendanceDashboard = () => {
         else lateA++;
       }
     });
-    return {
-      earlyM,
-      onTimeM,
-      lateM,
-      earlyA,
-      onTimeA,
-      lateA,
-    };
+    return { earlyM, onTimeM, lateM, earlyA, onTimeA, lateA };
   })();
 
+  // --- Chart Config ---
   const chartData = {
     labels: [
       "Early Morning",
@@ -136,14 +146,88 @@ const AttendanceDashboard = () => {
           summary.onTimeA,
           summary.lateA,
         ],
-        backgroundColor: "rgba(59, 130, 246, 0.9)",
-        borderRadius: 8,
+        backgroundColor: [
+          "rgba(37, 99, 235, 0.9)", // Blue (Tailwind: blue-600)
+          "rgba(16, 185, 129, 0.9)", // Green / Emerald (Tailwind: emerald-500)
+          "rgba(244, 63, 94, 0.9)", // Red / Rose (Tailwind: rose-500)
+          "rgba(37, 99, 235, 0.9)", // Blue (Tailwind: blue-600)
+          "rgba(16, 185, 129, 0.9)", // Green / Emerald (Tailwind: emerald-500)
+          "rgba(244, 63, 94, 0.9)", // Red / Rose (Tailwind: rose-500)
+        ],
+        borderRadius: 4,
+        barPercentage: 0.6,
+        categoryPercentage: 0.8,
       },
     ],
   };
 
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    onClick: (_, elements) => {
+      if (elements?.length) {
+        const categories = [
+          "Early Morning",
+          "On Time Morning",
+          "Late Morning",
+          "Early Afternoon",
+          "On Time Afternoon",
+          "Late Afternoon",
+        ];
+        showEmployeesForCategory(categories[elements[0].index]);
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: "#9ca3af", font: { size: 10 } },
+        grid: { display: false },
+      },
+      y: {
+        beginAtZero: true,
+        border: { display: false },
+        // Suggested Max ensures graph lines show even if data is 0
+        suggestedMax: 1,
+        ticks: {
+          color: "#fff",
+          font: { size: 11 },
+          stepSize: 1,
+          callback: function (value) {
+            return value.toFixed(1);
+          },
+        },
+        grid: { color: "rgba(255,255,255,0.1)" },
+      },
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: "top",
+        align: "center",
+        labels: {
+          color: "#fff",
+          font: { size: 12, weight: "bold" },
+          boxWidth: 15,
+          usePointStyle: false,
+        },
+      },
+      tooltip: {
+        backgroundColor: "#1e293b",
+        titleColor: "#fff",
+        bodyColor: "#cbd5e1",
+        borderColor: "#334155",
+        borderWidth: 1,
+        padding: 10,
+        displayColors: true,
+      },
+    },
+  };
+
+  // --- Modal Logic ---
   const escapeHtml = (str = "") =>
-    String(str).replace(/[&<>]/g, (tag) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[tag] || tag));
+    String(str).replace(
+      /[&<>]/g,
+      (tag) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[tag] || tag,
+    );
 
   const recordMatchesCategory = (r, cat) => {
     const am = parseTimeToMinutes(r.time_in_morning);
@@ -167,40 +251,40 @@ const AttendanceDashboard = () => {
   };
 
   const showEmployeesForCategory = (category) => {
-    const matched = filteredAttendance.filter((r) => recordMatchesCategory(r, category));
+    const matched = filteredAttendance.filter((r) =>
+      recordMatchesCategory(r, category),
+    );
 
     const html = `
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;gap:8px;align-items:center">
-          <input id="swal-search" placeholder="Search name or ID..." style="flex:1;padding:10px;border-radius:10px;border:1px solid #d1d5db;font-size:14px"/>
-          <div style="min-width:110px;color:#374151;font-size:13px">Matches: <strong id="swal-count">${matched.length}</strong></div>
+      <div style="display:flex;flex-direction:column;gap:15px; text-align:left;">
+        <div style="display:flex;gap:10px;align-items:center; background:rgba(255,255,255,0.05); padding:10px; rounded:10px; border:1px solid rgba(255,255,255,0.1);">
+          <input id="swal-search" placeholder="Search employee..." style="flex:1; background:transparent; border:none; color:#e2e8f0; outline:none; font-size:15px;" autocomplete="off"/>
+          <span style="font-size:12px; color:#94a3b8; font-weight:bold; background:rgba(0,0,0,0.3); padding:3px 8px; rounded:6px;">${matched.length}</span>
         </div>
-
-        <div style="max-height:420px;overflow:auto;border-radius:10px">
-          <table style="width:100%;border-collapse:collapse;font-size:14px;background:#fff;border-radius:10px">
-            <thead style="background:#f3f4f6;position:sticky;top:0;z-index:1">
-              <tr>
-                <th style="padding:8px 10px;text-align:left;border-bottom:1px solid #e5e7eb">Employee</th>
-                <th style="padding:8px 10px;text-align:center;border-bottom:1px solid #e5e7eb">AM In</th>
-                <th style="padding:8px 10px;text-align:center;border-bottom:1px solid #e5e7eb">PM In</th>
-              </tr>
+        
+        <div style="max-height:50vh; overflow:auto; border-radius:10px; border:1px solid rgba(255,255,255,0.05); background:rgba(0,0,0,0.2);">
+          <table style="width:100%; border-collapse:collapse; font-size:14px;">
+            <thead style="position:sticky; top:0; background:#1e293b; z-index:10;">
+               <tr>
+                  <th style="padding:12px; text-align:left; color:#94a3b8; font-weight:600; border-bottom:1px solid rgba(255,255,255,0.1);">EMPLOYEE</th>
+                  <th style="padding:12px; text-align:center; color:#94a3b8; font-weight:600; border-bottom:1px solid rgba(255,255,255,0.1);">MORNING</th>
+                  <th style="padding:12px; text-align:center; color:#94a3b8; font-weight:600; border-bottom:1px solid rgba(255,255,255,0.1);">AFTERNOON</th>
+               </tr>
             </thead>
             <tbody id="swal-rows">
               ${
                 matched.length
                   ? matched
-                      .map((r) => {
-                        const n = escapeHtml(r.employee_name || r.employee_id);
-                        const am = escapeHtml(formatTime12(r.time_in_morning));
-                        const pm = escapeHtml(formatTime12(r.time_in_afternoon));
-                        return `<tr>
-                          <td style="padding:8px 10px;border-bottom:1px solid #e9edf0">${n}</td>
-                          <td style="padding:8px 10px;text-align:center;border-bottom:1px solid #e9edf0">${am}</td>
-                          <td style="padding:8px 10px;text-align:center;border-bottom:1px solid #e9edf0">${pm}</td>
-                        </tr>`;
-                      })
+                      .map(
+                        (r) => `
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <td style="padding:12px; color:#f1f5f9; white-space: nowrap; font-weight:500;">${escapeHtml(r.employee_name || r.employee_id)}</td>
+                  <td style="padding:12px; text-align:center; color:#94a3b8; font-family:monospace; white-space: nowrap;">${escapeHtml(formatTime12(r.time_in_morning))}</td>
+                  <td style="padding:12px; text-align:center; color:#94a3b8; font-family:monospace; white-space: nowrap;">${escapeHtml(formatTime12(r.time_in_afternoon))}</td>
+                </tr>`,
+                      )
                       .join("")
-                  : `<tr><td colspan="3" style="padding:12px;text-align:center;color:#6b7280">No records</td></tr>`
+                  : `<tr><td colspan="3" style="padding:20px; text-align:center; color:#64748b;">No records found</td></tr>`
               }
             </tbody>
           </table>
@@ -209,131 +293,144 @@ const AttendanceDashboard = () => {
     `;
 
     Swal.fire({
-      title: `${escapeHtml(category)} — ${escapeHtml(displayDateString(currentDate))}`,
+      title: `<span style="color:#f8fafc; font-size:20px;">${escapeHtml(category)}</span>`,
       html,
-      width: window.innerWidth < 600 ? "90%" : 760,
-      showCloseButton: true,
+      width: 800,
       showConfirmButton: false,
-      background: "#fff",
+      showCloseButton: true,
+      background: "#1e293b",
+      customClass: { popup: "border border-slate-700 shadow-2xl rounded-2xl" },
       didOpen: () => {
-        const c = Swal.getHtmlContainer();
-        if (!c) return;
-        const input = c.querySelector("#swal-search");
-        const tbody = c.querySelector("#swal-rows");
-        const countEl = c.querySelector("#swal-count");
-
-        const render = (q = "") => {
-          const query = q.toLowerCase();
-          const filtered = matched.filter(
-            (r) =>
-              r.employee_name?.toLowerCase().includes(query) ||
-              r.employee_id?.toLowerCase().includes(query)
+        const input = document.getElementById("swal-search");
+        const tbody = document.getElementById("swal-rows");
+        input?.addEventListener("input", (e) => {
+          const query = e.target.value.toLowerCase();
+          const filtered = matched.filter((r) =>
+            (r.employee_name || r.employee_id).toLowerCase().includes(query),
           );
-
-          countEl.textContent = filtered.length;
           tbody.innerHTML = filtered.length
             ? filtered
-                .map((r) => {
-                  const n = escapeHtml(r.employee_name || r.employee_id);
-                  const am = escapeHtml(formatTime12(r.time_in_morning));
-                  const pm = escapeHtml(formatTime12(r.time_in_afternoon));
-                  return `<tr>
-                    <td style="padding:8px 10px;border-bottom:1px solid #e9edf0">${n}</td>
-                    <td style="padding:8px 10px;text-align:center;border-bottom:1px solid #e9edf0">${am}</td>
-                    <td style="padding:8px 10px;text-align:center;border-bottom:1px solid #e9edf0">${pm}</td>
-                  </tr>`;
-                })
+                .map(
+                  (r) => `
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+              <td style="padding:12px; color:#f1f5f9; white-space: nowrap; font-weight:500;">${escapeHtml(r.employee_name || r.employee_id)}</td>
+              <td style="padding:12px; text-align:center; color:#94a3b8; font-family:monospace; white-space: nowrap;">${escapeHtml(formatTime12(r.time_in_morning))}</td>
+              <td style="padding:12px; text-align:center; color:#94a3b8; font-family:monospace; white-space: nowrap;">${escapeHtml(formatTime12(r.time_in_afternoon))}</td>
+            </tr>`,
+                )
                 .join("")
-            : `<tr><td colspan="3" style="padding:12px;text-align:center;color:#6b7280">No results</td></tr>`;
-        };
-
-        input?.addEventListener("input", (e) => render(e.target.value));
+            : `<tr><td colspan="3" style="padding:20px; text-align:center; color:#64748b;">No matches</td></tr>`;
+        });
         input?.focus();
       },
     });
   };
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    onClick: (_, elements) => {
-      if (elements?.length) showEmployeesForCategory(chartData.labels[elements[0].index]);
-    },
-    scales: {
-      x: { ticks: { color: "#e5e7eb" }, grid: { color: "rgba(255,255,255,0.1)" } },
-      y: { beginAtZero: true, ticks: { color: "#e5e7eb" }, grid: { color: "rgba(255,255,255,0.1)" } },
-    },
-    plugins: {
-      legend: { labels: { color: "#fff" } },
-      tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${ctx.raw}` } },
-    },
-  };
-
-  const goToPreviousDay = () => setCurrentDate((d) => new Date(d.setDate(d.getDate() - 1)));
-  const goToNextDay = () => setCurrentDate((d) => new Date(d.setDate(d.getDate() + 1)));
-  const handleDateChange = (e) => setCurrentDate(parseYYYYMMDDToDate(e.target.value));
+  const navDate = (d) =>
+    setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() + d)));
+  const handleDateChange = (e) =>
+    setCurrentDate(parseYYYYMMDDToDate(e.target.value));
 
   if (loading)
     return (
-      <div className="text-gray-300 text-center py-6 animate-pulse">
-        Loading attendance summary...
-      </div>
+      <div className="h-96 w-full bg-[#0B1221] rounded-3xl animate-pulse border border-white/5" />
     );
 
   return (
-    <div className="w-full bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 border border-gray-700 rounded-3xl shadow-lg p-6">
-      {/* Header with responsive layout */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-3">
-        <h2 className="text-lg font-semibold text-white tracking-wide flex items-center gap-2">
-          <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-          Attendance Summary
-        </h2>
+    // MAIN CONTAINER
+    <div className="relative w-full overflow-hidden rounded-3xl p-[1px] shadow-2xl bg-[#0B1221] border border-slate-800">
+      {/* Content Container */}
+      <div className="relative z-10 w-full rounded-3xl p-5 sm:p-6 flex flex-col gap-6">
+        {/* 1. Header Section */}
+        <div className="flex flex-col gap-4">
+          <div>
+            <div className="flex items-center gap-3">
+              <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
+              <h2 className="text-xl font-bold text-white tracking-tight">
+                Attendance Overview
+              </h2>
+            </div>
+            <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1 ml-6">
+              {displayDateString(currentDate).toUpperCase()}
+            </p>
+          </div>
 
-        <div className="w-full md:w-auto flex items-center justify-center md:justify-end gap-2">
-          <button
-            onClick={goToPreviousDay}
-            className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium text-white"
-          >
-            ←
-          </button>
-          <input
-            type="date"
-            value={localYYYYMMDD(currentDate)}
-            onChange={handleDateChange}
-            className="p-2 rounded-lg bg-gray-800 border border-gray-600 text-white text-sm"
-          />
-          <button
-            onClick={goToNextDay}
-            className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium text-white"
-          >
-            →
-          </button>
+          {/* DATE PICKER */}
+          <div className="flex items-center justify-between bg-[#151e32] rounded-xl p-1.5 border border-slate-700/50 w-[240px] self-start shadow-inner">
+            <button
+              onClick={() => navDate(-1)}
+              className="shrink-0 w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+            <input
+              type="date"
+              value={localYYYYMMDD(currentDate)}
+              onChange={handleDateChange}
+              className="min-w-0 flex-1 bg-transparent border-none text-sm text-slate-200 focus:ring-0 cursor-pointer text-center font-bold px-0"
+              style={{ colorScheme: "dark" }}
+            />
+            <button
+              onClick={() => navDate(1)}
+              className="shrink-0 w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* 2. HERO STATS CARD */}
+        <div className="w-full bg-[#151e32] border border-slate-700/30 rounded-3xl p-8 flex flex-col items-center justify-center text-center relative overflow-hidden shadow-lg">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-blue-600/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+          <div className="relative z-10 flex flex-col items-center">
+            <span className="px-5 py-1.5 rounded-full bg-[#1e293b] text-blue-400 text-[10px] font-bold uppercase tracking-wider mb-5 border border-blue-500/10 shadow-sm">
+              Live Count
+            </span>
+            <h1 className="text-7xl sm:text-8xl font-black text-slate-200 tracking-tighter drop-shadow-2xl">
+              {onDutyCount}
+            </h1>
+            <p className="text-sm text-slate-400 font-semibold mt-2">
+              Employees On Duty
+            </p>
+          </div>
+        </div>
+
+        {/* 3. CHART SECTION (Always Rendered) */}
+        <div className="w-full h-[320px] bg-[#0f1623] border border-slate-800 rounded-3xl p-4 sm:p-6 relative">
+          <Bar data={chartData} options={chartOptions} />
+        </div>
+
+        {/* 4. FOOTER SUMMARY */}
+        <div className="text-center mt-2 pb-1">
+          <p className="text-sm text-slate-500 font-medium tracking-wide">
+            Summary for {displayDateString(currentDate)}
+          </p>
         </div>
       </div>
-
-      {/* Readable Date */}
-      <div className="text-center mb-4 text-sm text-gray-300 font-medium">
-        {displayDateString(currentDate)}
-      </div>
-
-      {/* On Duty Counter */}
-      <div className="bg-gray-950/60 border border-gray-700 rounded-2xl py-5 text-center mb-5 shadow-inner">
-        <p className="text-gray-300 text-sm uppercase tracking-wide">
-          Employees On Duty
-        </p>
-        <h1 className="text-6xl font-extrabold tracking-wider mt-2 text-white">
-          {onDutyCount}
-        </h1>
-      </div>
-
-      {/* Chart */}
-      <div className="w-full h-[320px] bg-gray-950/50 border border-gray-700 rounded-2xl p-4 shadow-inner backdrop-blur-sm">
-        <Bar data={chartData} options={chartOptions} />
-      </div>
-
-      <p className="text-xs text-gray-500 mt-3 text-center">
-        Summary for {displayDateString(currentDate)}
-      </p>
     </div>
   );
 };

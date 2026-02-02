@@ -570,7 +570,7 @@ const Payroll = () => {
 
             <div className="w-[2px] my-1 rounded bg-black" />
 
-            <div className="flex flex-row h-10 overflow-hidden border rounded-lg w-fit divide-x-1 employee-newheaderbuttons-outline">
+            <div className="flex flex-row h-10 overflow-hidden border rounded-lg w-fit divide-x employee-newheaderbuttons-outline">
               <Tooltip
                 title="List View"
                 placement="bottom-end"

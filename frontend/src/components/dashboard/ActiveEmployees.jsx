@@ -7,7 +7,7 @@ const AttendanceSummary = () => {
   const [activeEmployeeCount, setActiveEmployeeCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split("T")[0]
+    new Date().toISOString().split("T")[0],
   );
 
   // 🟢 Fetch all attendance once
@@ -40,11 +40,9 @@ const AttendanceSummary = () => {
   // 🟡 Count unique employee IDs for selected date
   const countActiveEmployees = () => {
     const filteredByDate = attendanceData.filter(
-      (record) => record.attendance_date === selectedDate
+      (record) => record.attendance_date === selectedDate,
     );
-    const uniqueEmployees = new Set(
-      filteredByDate.map((r) => r.employee_id)
-    );
+    const uniqueEmployees = new Set(filteredByDate.map((r) => r.employee_id));
     setActiveEmployeeCount(uniqueEmployees.size);
   };
 
@@ -127,7 +125,8 @@ const AttendanceSummary = () => {
 
       {/* FOOTER */}
       <div className="text-xs text-gray-400 mt-4 text-center border-t border-gray-700 pt-2 font-bold tracking-wide">
-        CJIS-SERV01 — REV{new Date().toISOString().slice(2, 10).replace(/-/g, "-")}
+        CJIS-SERV01 — REV
+        {new Date().toISOString().slice(2, 10).replace(/-/g, "-")}
       </div>
     </div>
   );

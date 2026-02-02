@@ -250,7 +250,7 @@ const EmployeeDTRModal = ({ data, onClose, onCreditedDaysChange }) => {
         exit={{ scale: 0.95, opacity: 0 }}
       >
         {/* Professional Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 sm:px-6 py-3 sm:py-4 border-b border-blue-800 flex-shrink-0">
+        <div className="bg-linear-to-r from-blue-600 to-blue-700 text-white px-4 sm:px-6 py-3 sm:py-4 border-b border-blue-800 shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Calendar className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -273,7 +273,7 @@ const EmployeeDTRModal = ({ data, onClose, onCreditedDaysChange }) => {
         </div>
 
         {/* Controls Section */}
-        <div className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 px-4 sm:px-6 py-4 sm:py-5 flex-shrink-0">
+        <div className="bg-linear-to-r from-gray-50 to-gray-100 border-b border-gray-200 px-4 sm:px-6 py-4 sm:py-5 shrink-0">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 lg:gap-6">
             {/* Month Selection */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 w-full lg:w-auto">
@@ -311,7 +311,7 @@ const EmployeeDTRModal = ({ data, onClose, onCreditedDaysChange }) => {
               <button
                 type="button"
                 onClick={() => setShowFirstHalf(!showFirstHalf)}
-                className="flex-1 sm:flex-none px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center space-x-2.5 font-medium"
+                className="flex-1 sm:flex-none px-6 py-3 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center space-x-2.5 font-medium"
               >
                 <Calendar className="w-5 h-5" />
                 <span>{showFirstHalf ? "Show 2nd Half" : "Show 1st Half"}</span>
@@ -325,11 +325,11 @@ const EmployeeDTRModal = ({ data, onClose, onCreditedDaysChange }) => {
           {showFirstHalf ? (
             <div className="p-3 sm:p-6">
               <div className="flex items-center space-x-2 mb-3 sm:mb-4">
-                <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-600 rounded-full shrink-0"></div>
                 <h3 className="text-base sm:text-lg font-bold text-gray-800">
                   Days 1-15
                 </h3>
-                <span className="text-xs sm:text-sm text-gray-500 bg-gray-200 px-2 py-1 rounded-full flex-shrink-0">
+                <span className="text-xs sm:text-sm text-gray-500 bg-gray-200 px-2 py-1 rounded-full shrink-0">
                   First Half
                 </span>
               </div>
@@ -337,7 +337,7 @@ const EmployeeDTRModal = ({ data, onClose, onCreditedDaysChange }) => {
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[600px] sm:min-w-0">
                     <thead>
-                      <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+                      <tr className="bg-linear-to-r from-gray-50 to-gray-100 border-b border-gray-200">
                         <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider border-r">
                           #
                         </th>
@@ -388,7 +388,7 @@ const EmployeeDTRModal = ({ data, onClose, onCreditedDaysChange }) => {
                                 {index + 1}
                               </span>
                               {isSunday(record.attendance_date) && (
-                                <Sun className="w-3 h-3 text-red-500 ml-1 flex-shrink-0" />
+                                <Sun className="w-3 h-3 text-red-500 ml-1 shrink-0" />
                               )}
                             </div>
                           </td>
@@ -496,11 +496,11 @@ const EmployeeDTRModal = ({ data, onClose, onCreditedDaysChange }) => {
           {!showFirstHalf ? (
             <div className="p-3 sm:p-6">
               <div className="flex items-center space-x-2 mb-3 sm:mb-4">
-                <div className="w-2 h-2 bg-green-600 rounded-full flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-green-600 rounded-full shrink-0"></div>
                 <h3 className="text-base sm:text-lg font-bold text-gray-800">
                   Days 16-31
                 </h3>
-                <span className="text-xs sm:text-sm text-gray-500 bg-gray-200 px-2 py-1 rounded-full flex-shrink-0">
+                <span className="text-xs sm:text-sm text-gray-500 bg-gray-200 px-2 py-1 rounded-full shrink-0">
                   Second Half
                 </span>
               </div>
@@ -508,7 +508,7 @@ const EmployeeDTRModal = ({ data, onClose, onCreditedDaysChange }) => {
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[600px] sm:min-w-0">
                     <thead>
-                      <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+                      <tr className="bg-linear-to-r from-gray-50 to-gray-100 border-b border-gray-200">
                         <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider border-r">
                           #
                         </th>
@@ -566,7 +566,7 @@ const EmployeeDTRModal = ({ data, onClose, onCreditedDaysChange }) => {
                                   </span>
                                   {day !== null &&
                                     isSunday(record.attendance_date) && (
-                                      <Sun className="w-3 h-3 text-red-500 ml-1 flex-shrink-0" />
+                                      <Sun className="w-3 h-3 text-red-500 ml-1 shrink-0" />
                                     )}
                                 </div>
                               </td>
@@ -688,10 +688,10 @@ const EmployeeDTRModal = ({ data, onClose, onCreditedDaysChange }) => {
         </div>
 
         {/* Professional Footer */}
-        <div className="bg-gray-50 border-t border-gray-200 px-4 sm:px-6 py-3 sm:py-4 flex-shrink-0">
+        <div className="bg-gray-50 border-t border-gray-200 px-4 sm:px-6 py-3 sm:py-4 shrink-0">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex items-center space-x-2 text-xs sm:text-sm text-gray-500">
-              <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+              <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" />
               <span className="truncate">
                 Sundays are marked as non-working days
               </span>
@@ -700,14 +700,14 @@ const EmployeeDTRModal = ({ data, onClose, onCreditedDaysChange }) => {
               <button
                 type="button"
                 onClick={() => setShowFirstHalf(!showFirstHalf)}
-                className="w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-md flex items-center justify-center space-x-1.5 sm:space-x-2 text-xs sm:text-sm"
+                className="w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 bg-linear-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-md flex items-center justify-center space-x-1.5 sm:space-x-2 text-xs sm:text-sm"
               >
                 <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span>{showFirstHalf ? "Show 2nd Half" : "Show 1st Half"}</span>
               </button>
               <button
                 type="button"
-                className="w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all shadow-md flex items-center justify-center space-x-1.5 sm:space-x-2 text-xs sm:text-sm"
+                className="w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 bg-linear-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all shadow-md flex items-center justify-center space-x-1.5 sm:space-x-2 text-xs sm:text-sm"
                 onClick={onClose}
               >
                 <X className="w-3 h-3 sm:w-4 sm:h-4" />
