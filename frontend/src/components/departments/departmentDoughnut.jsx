@@ -7,42 +7,53 @@ import BASE_URL from "../../../backend/server/config";
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 // Custom plugin for center text
+// Custom plugin for responsive center text
 const centerTextPlugin = {
   id: "centerText",
   beforeDraw: (chart) => {
     const {
       ctx,
-      width,
-      height,
       chartArea: { top, bottom, left, right },
     } = chart;
+
+    if (!chart.data?.datasets?.length) return;
+
     const centerX = (left + right) / 2;
     const centerY = (top + bottom) / 2;
 
-    // Get total value
     const data = chart.data.datasets[0].data;
     const total = data.reduce((a, b) => a + b, 0);
+    if (!total) return;
 
-    // Find the largest segment
     const maxValue = Math.max(...data);
     const maxIndex = data.indexOf(maxValue);
-    const maxLabel = chart.data.labels[maxIndex];
+    const rawLabel = chart.data.labels[maxIndex] || "";
     const percentage = ((maxValue / total) * 100).toFixed(1);
 
-    // Clear previous text
+    // Responsive scaling based on chart size
+    const chartSize = Math.min(right - left, bottom - top);
+    const scale = chartSize / 280;
+
+    const percentFontSize = Math.max(18, 36 * scale);
+    const labelFontSize = Math.max(10, 14 * scale);
+
+    // Prevent long labels from overflowing
+    const safeLabel =
+      rawLabel.length > 18 ? rawLabel.slice(0, 18) + "…" : rawLabel;
+
     ctx.save();
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    // Draw percentage
-    ctx.font = "bold 36px system-ui";
+    // Percentage
+    ctx.font = `bold ${percentFontSize}px system-ui`;
     ctx.fillStyle = "#1e40af";
-    ctx.fillText(`${percentage}%`, centerX, centerY - 10);
+    ctx.fillText(`${percentage}%`, centerX, centerY - percentFontSize * 0.25);
 
-    // Draw label
-    ctx.font = "14px system-ui";
+    // Label
+    ctx.font = `${labelFontSize}px system-ui`;
     ctx.fillStyle = "#64748b";
-    ctx.fillText(maxLabel, centerX, centerY + 20);
+    ctx.fillText(safeLabel, centerX, centerY + labelFontSize * 1.4);
 
     ctx.restore();
   },
@@ -286,14 +297,19 @@ const DepartmentDoughnutChart = () => {
         display: true,
         position: "bottom",
         labels: {
-          boxWidth: 14,
-          padding: 15,
-          font: { size: 14, weight: "500", family: "system-ui" },
-          color: "#374151",
+          boxWidth: 12,
+          padding: 12,
           usePointStyle: true,
           pointStyle: "circle",
+          color: "#374151",
+          font: (ctx) => ({
+            size: ctx.chart.width < 480 ? 11 : 14,
+            weight: "500",
+            family: "system-ui",
+          }),
         },
       },
+
       tooltip: {
         backgroundColor: "rgba(0, 0, 0, 0.8)",
         titleColor: "white",
@@ -508,7 +524,7 @@ const DepartmentDoughnutChart = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="grid gap-3 sm:gap-4 grid-cols-1 lg:grid-cols-2">
+                  <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
                     {filteredMatched.map((emp) => (
                       <EmployeeCard key={emp.employee_id} emp={emp} />
                     ))}

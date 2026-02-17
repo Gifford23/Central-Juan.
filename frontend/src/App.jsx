@@ -6,6 +6,8 @@ import ProtectedRoute from "./authentication/ProtectedRoute";
 import Layout from "./components/navigation/Layou";
 import RoleBasedRedirect from "./authentication/RoleBaseRedirect";
 import Unauthorized from "./screens/Unauthorized";
+import LandingPage from "./authentication/LandingPage"; // Adjust path if needed
+import PricingPage from "./pages/PricingPage";
 
 import useRoles from "./authentication/useRoles";
 import Dashboard from "./components/dashboard/dashboard";
@@ -143,6 +145,8 @@ function SessionGate() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<RoleBasedRedirect />} />
+        <Route path="/LandingPage" element={<LandingPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
 
         {/* Admin Routes */}
         <Route
