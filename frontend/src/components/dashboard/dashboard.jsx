@@ -90,7 +90,7 @@ function StatCard({ value, label, icon: Icon, accent = "blue" }) {
 
 // ─────────────────────────────────────────────────────────
 // SECTION CARD
-// ─────────────────────────────────────────────────────────
+// ───────────────────────��─────────────────────────────────
 function SectionCard({ children, className = "" }) {
   return (
     <div
@@ -332,7 +332,7 @@ function RequestRow({ request, onApprove, onReject, isProcessing }) {
 
 // ─────────────────────────────────────────────────────────
 // MAIN DASHBOARD
-// ─────────────────────────────────────────────────────────
+// ────────────────────────────────────────────────────────��
 function Dashboard() {
   const { user } = useSession();
   const navigate = useNavigate();
@@ -566,13 +566,23 @@ function Dashboard() {
     loadTasks();
   }, []);
 
+  // Existing: fetch on filter change
   useEffect(() => {
     fetchAttendanceRequests();
   }, [requestFilter]);
 
+  // ✅ NEW: Auto-poll every 30 seconds to make the panel truly "live"
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchAttendanceRequests();
+    }, 10000); // 10 seconds — adjust as needed
+
+    return () => clearInterval(intervalId); // cleanup on unmount
+  }, [fetchAttendanceRequests]);
+
   // ─────────────────────────────────────────────────────────
   // RENDER
-  // ─────────────────────────────────────────────────────────
+  // ────��────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100/80 font-sans text-slate-900">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
