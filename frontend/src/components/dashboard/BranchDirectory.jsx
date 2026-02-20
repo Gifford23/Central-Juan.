@@ -1,46 +1,77 @@
 import React, { useEffect, useMemo, useState } from "react";
 import BASE_URL from "../../../backend/server/config";
-import { X, MapPin, Users, Building2, Search, ArrowRight } from "lucide-react";
+import {
+  X,
+  MapPin,
+  Users,
+  Building2,
+  Search,
+  ArrowRight,
+  ChevronDown,
+  ChevronUp,
+  UserCheck,
+} from "lucide-react";
 
-/**
- * BranchDirectory.jsx
- * - 2-column scrollable branch list
- * - Professional & Elegant UI Overhaul
- */
+// ─────────────────────────────────────────────
+// CONSTANTS
+// ─────────────────────────────────────────────
+const CARDS_PER_PAGE = 4;
 
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+
+/** Returns true if the employee's status is "active" (case-insensitive). */
+const isActive = (emp) =>
+  (emp.status || "").toString().trim().toLowerCase() === "active";
+
+// ─────────────────────────────────────────────
+// SKELETON CARD
+// ─────────────────────────────────���───────────
 function SkeletonCard() {
   return (
-    <div className="rounded-xl bg-white border border-gray-100 p-5 shadow-sm animate-pulse min-h-[140px]">
-      <div className="flex justify-between items-start mb-4">
-        <div className="h-5 w-1/2 bg-gray-200 rounded" />
-        <div className="h-6 w-16 bg-gray-100 rounded-full" />
-      </div>
-      <div className="h-3 w-3/4 bg-gray-100 rounded mb-6" />
-      <div className="flex items-center justify-between mt-auto">
-        <div className="flex -space-x-2">
-          <div className="h-8 w-8 rounded-full bg-gray-200 border-2 border-white" />
-          <div className="h-8 w-8 rounded-full bg-gray-200 border-2 border-white" />
+    <div className="rounded-xl bg-white border border-slate-100 p-3.5 shadow-sm animate-pulse overflow-hidden relative">
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200" />
+      <div className="flex justify-between items-start mb-2.5">
+        <div className="space-y-1.5">
+          <div className="h-3 w-28 bg-slate-200 rounded-md" />
+          <div className="h-2.5 w-16 bg-slate-100 rounded-md" />
         </div>
-        <div className="h-3 w-12 bg-gray-100 rounded" />
+        <div className="h-4 w-10 bg-slate-100 rounded-full" />
+      </div>
+      <div className="h-2.5 w-3/4 bg-slate-100 rounded-md mb-1" />
+      <div className="h-2.5 w-1/2 bg-slate-100 rounded-md mb-3.5" />
+      <div className="flex items-center justify-between pt-2.5 border-t border-slate-100">
+        <div className="flex -space-x-1.5">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="w-5 h-5 rounded-full bg-slate-200 border-2 border-white"
+            />
+          ))}
+        </div>
+        <div className="h-4 w-14 bg-slate-100 rounded-md" />
       </div>
     </div>
   );
 }
 
-// Enhanced Avatar Stack
-function AvatarPile({ items = [], names = [], size = 8, max = 3 }) {
+// ─────────────────────────────────────────────
+// AVATAR PILE
+// ─────────────────────────────────────────────
+function AvatarPile({ items = [], names = [], size = 6, max = 3 }) {
   const slice = items.slice(0, max);
   const displayNames = names.slice(0, max);
 
   return (
-    <div className="flex -space-x-2.5 items-center">
+    <div className="flex -space-x-1.5 items-center">
       {slice.map((it, idx) =>
         it ? (
           <img
             key={idx}
             src={it}
             alt=""
-            className={`w-${size} h-${size} rounded-full object-cover border-[3px] border-white shadow-sm bg-gray-100`}
+            className={`w-${size} h-${size} rounded-full object-cover border-2 border-white shadow-sm bg-slate-100`}
             onError={(e) => {
               e.currentTarget.onerror = null;
               e.currentTarget.src = "/dist/images/default-avatar.png";
@@ -49,18 +80,19 @@ function AvatarPile({ items = [], names = [], size = 8, max = 3 }) {
         ) : (
           <div
             key={idx}
-            className={`w-${size} h-${size} rounded-full bg-linear-to-br from-blue-500 to-blue-600 text-[10px] font-bold text-white flex items-center justify-center border-[3px] border-white shadow-sm`}
+            className={`w-${size} h-${size} rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-[9px] font-bold text-white flex items-center justify-center border-2 border-white shadow-sm`}
           >
             {displayNames[idx]
-              ? `${displayNames[idx][0]}${displayNames[idx].split(" ").slice(-1)[0][0] || ""}`.toUpperCase()
+              ? `${displayNames[idx][0]}${
+                  displayNames[idx].split(" ").slice(-1)[0][0] || ""
+                }`.toUpperCase()
               : "?"}
           </div>
         ),
       )}
-
       {items.length > max && (
         <div
-          className={`w-${size} h-${size} rounded-full bg-gray-100 text-[10px] font-bold text-gray-500 flex items-center justify-center border-[3px] border-white shadow-sm`}
+          className={`w-${size} h-${size} rounded-full bg-slate-100 text-[9px] font-bold text-slate-500 flex items-center justify-center border-2 border-white shadow-sm`}
         >
           +{items.length - max}
         </div>
@@ -69,6 +101,21 @@ function AvatarPile({ items = [], names = [], size = 8, max = 3 }) {
   );
 }
 
+// ─────────────────────────────────────────────
+// ACTIVE BADGE  ← NEW
+// ─────────────────────────────────────────────
+function ActiveBadge() {
+  return (
+    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-[9px] font-bold text-emerald-600 leading-none shrink-0">
+      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse inline-block" />
+      Active
+    </span>
+  );
+}
+
+// ─────────────────────────────────────────────
+// MAIN COMPONENT
+// ─────────────────────────────────────────────
 export default function BranchDirectory() {
   const [branches, setBranches] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -76,7 +123,9 @@ export default function BranchDirectory() {
   const [selectedBranch, setSelectedBranch] = useState(null);
   const [branchSearch, setBranchSearch] = useState("");
   const [modalSearch, setModalSearch] = useState("");
+  const [showAll, setShowAll] = useState(false);
 
+  // ── Data Fetching ────────────────────────
   useEffect(() => {
     let mounted = true;
     const fetchData = async () => {
@@ -87,9 +136,7 @@ export default function BranchDirectory() {
         ]);
         const branchJson = await branchRes.json();
         const empJson = await empRes.json();
-
         if (!mounted) return;
-
         setBranches(
           Array.isArray(branchJson) ? branchJson : branchJson.data || [],
         );
@@ -104,12 +151,14 @@ export default function BranchDirectory() {
     return () => (mounted = false);
   }, []);
 
+  // ── ESC to close ─────────────────────────
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && setSelectedBranch(null);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // ── Helpers ───────────────────────────────
   const resolveImage = (img) => {
     if (!img) return null;
     const s = String(img).trim();
@@ -118,21 +167,30 @@ export default function BranchDirectory() {
     return `${BASE_URL}/images/${s}`;
   };
 
+  // ── Active employees only  ← NEW ─────────
+  // Filter the full employee list down to users whose status === "active".
+  // Everything downstream (counts, avatars, modal list) uses this derived list.
+  const activeEmployees = useMemo(
+    () => employees.filter(isActive),
+    [employees],
+  );
+
   const filteredBranches = useMemo(() => {
     const q = branchSearch.trim().toLowerCase();
     if (!q) return branches;
     return branches.filter((b) => (b.name || "").toLowerCase().includes(q));
   }, [branches, branchSearch]);
 
+  // ── empMap now built from activeEmployees only  ← CHANGED ────────────────
   const empMap = useMemo(() => {
     const map = new Map();
-    for (const e of employees) {
+    for (const e of activeEmployees) {
       const k = (e.branch_name || "").toLowerCase().trim();
       if (!map.has(k)) map.set(k, []);
       map.get(k).push(e);
     }
     return map;
-  }, [employees]);
+  }, [activeEmployees]);
 
   const branchEmployees = useMemo(() => {
     if (!selectedBranch) return [];
@@ -159,34 +217,35 @@ export default function BranchDirectory() {
     return (empMap.get(k) || []).length;
   };
 
+  // ── Visible cards ─────────────────────────
+  const visibleBranches = useMemo(
+    () =>
+      showAll ? filteredBranches : filteredBranches.slice(0, CARDS_PER_PAGE),
+    [filteredBranches, showAll],
+  );
+  const hiddenCount = filteredBranches.length - CARDS_PER_PAGE;
+
+  // ─────────────────────────────────────────
+  // LOADING STATE
+  // ─────────────────────────────────────────
   if (loading) {
     return (
-      <div className="w-full min-h-screen bg-linear-to-br from-gray-950 via-slate-900 to-gray-950 text-white rounded-3xl p-4 sm:p-6 lg:p-8">
-        <div className="space-y-5">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2.5 bg-linear-to-br from-blue-600 to-indigo-700 rounded-xl shadow-lg">
-                  <Building2 className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white">
-                  Branch Directory
-                </h3>
-              </div>
-              <div className="text-sm text-gray-400 ml-14">
-                Loading branches...
-              </div>
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div className="relative px-4 sm:px-5 py-3.5 border-b border-slate-100">
+          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 rounded-t-2xl" />
+          <div className="flex items-center gap-3 mt-0.5">
+            <div className="p-2 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg shadow-sm shrink-0">
+              <Building2 className="w-3.5 h-3.5 text-white" />
             </div>
-            <div className="w-full sm:w-64">
-              <div className="h-11 bg-gray-800 rounded-xl animate-pulse" />
+            <div>
+              <div className="h-3.5 w-28 bg-slate-200 rounded-md animate-pulse mb-1" />
+              <div className="h-2.5 w-36 bg-slate-100 rounded-md animate-pulse" />
             </div>
           </div>
-
-          <div
-            className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 mt-6"
-            style={{ maxHeight: "70vh", overflowY: "auto" }}
-          >
-            {Array.from({ length: 6 }).map((_, i) => (
+        </div>
+        <div className="p-4 bg-slate-50/50">
+          <div className="grid grid-cols-2 gap-2.5">
+            {Array.from({ length: CARDS_PER_PAGE }).map((_, i) => (
               <SkeletonCard key={i} />
             ))}
           </div>
@@ -195,203 +254,359 @@ export default function BranchDirectory() {
     );
   }
 
+  // ─────────────────────────────────────────
+  // MAIN RENDER
+  // ─────────────────────────────────────────
   return (
-    <div className="flex flex-col h-full bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-      {/* --- Header Section --- */}
-      <div className="px-6 py-5 border-b border-gray-100 bg-white sticky top-0 z-10">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Building2 className="text-blue-600 w-5 h-5" />
-              <h3 className="text-xl font-bold text-gray-800 tracking-tight">
+    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+      {/* ══════════════════════════════════════
+          HEADER
+      ══════════════════════════════════════ */}
+      <div className="relative px-4 sm:px-5 py-3.5 border-b border-slate-100 bg-white">
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 rounded-t-2xl" />
+        <div className="absolute -top-6 -right-6 w-24 h-24 bg-blue-100/20 rounded-full blur-2xl pointer-events-none" />
+
+        <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mt-0.5">
+          {/* Title */}
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg shadow-md shadow-blue-200/50 shrink-0">
+              <Building2 className="w-3.5 h-3.5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-slate-900 tracking-tight leading-tight">
                 Branch Directory
               </h3>
+              {/*
+                ← CHANGED: subtitle now shows total branches and ACTIVE staff count.
+                activeEmployees.length replaces employees.length.
+              */}
+              <p className="text-[10px] text-slate-400 font-medium mt-0.5">
+                <span className="text-blue-600 font-semibold">
+                  {branches.length}
+                </span>{" "}
+                locations ·{" "}
+                <span className="text-emerald-600 font-semibold">
+                  {activeEmployees.length}
+                </span>{" "}
+                active staff
+              </p>
             </div>
-            <p className="text-sm text-gray-500 font-medium">
-              {branches.length} active locations • {employees.length} total
-              staff
-            </p>
           </div>
 
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          {/* Search */}
+          <div className="relative w-full sm:w-48 group">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 group-focus-within:text-blue-500 transition-colors pointer-events-none" />
             <input
               type="text"
-              placeholder="Find a branch..."
+              placeholder="Search branches..."
               value={branchSearch}
-              onChange={(e) => setBranchSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 placeholder-gray-400 outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all"
+              onChange={(e) => {
+                setBranchSearch(e.target.value);
+                setShowAll(false);
+              }}
+              className="w-full pl-7 pr-7 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-[11px] text-slate-700 placeholder-slate-400 outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 focus:bg-white transition-all duration-200"
             />
+            {branchSearch && (
+              <button
+                onClick={() => {
+                  setBranchSearch("");
+                  setShowAll(false);
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                <X size={10} />
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-      {/* --- Scrollable Content --- */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50/50 custom-scrollbar">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-          {filteredBranches.length === 0 ? (
-            <div className="col-span-1 lg:col-span-2 py-12 flex flex-col items-center justify-center text-center">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <Building2 className="w-8 h-8 text-gray-400" />
-              </div>
-              <h3 className="text-gray-900 font-semibold">No branches found</h3>
-              <p className="text-gray-500 text-sm mt-1">
-                Try adjusting your search criteria
-              </p>
+      {/* ══════════════════════════════════════
+          CARD GRID
+      ══════════════════════════════════════ */}
+      <div className="p-3.5 sm:p-4 bg-gradient-to-b from-slate-50/60 to-white">
+        {filteredBranches.length === 0 ? (
+          <div className="py-8 flex flex-col items-center justify-center text-center">
+            <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center mb-2.5 shadow-inner">
+              <Building2 className="w-4 h-4 text-slate-300" />
             </div>
-          ) : (
-            filteredBranches.map((branch) => {
-              const count = employeeCountFor(branch);
-              const emps =
-                empMap.get((branch.name || "").toLowerCase().trim()) || [];
-              const avatars = emps
-                .slice(0, 6)
-                .map((e) => resolveImage(e.image));
-              const names = emps.map((e) => `${e.first_name} ${e.last_name}`);
+            <p className="text-slate-700 font-semibold text-xs">
+              No branches found
+            </p>
+            <p className="text-slate-400 text-[11px] mt-1">
+              Try a different search term.
+            </p>
+            {branchSearch && (
+              <button
+                onClick={() => setBranchSearch("")}
+                className="mt-2 text-[11px] font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+              >
+                Clear search
+              </button>
+            )}
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 gap-2.5">
+              {visibleBranches.map((branch) => {
+                const count = employeeCountFor(branch);
+                const emps =
+                  empMap.get((branch.name || "").toLowerCase().trim()) || [];
+                const avatars = emps
+                  .slice(0, 6)
+                  .map((e) => resolveImage(e.image));
+                const names = emps.map((e) => `${e.first_name} ${e.last_name}`);
 
-              return (
-                <button
-                  key={branch.branch_id}
-                  onClick={() => {
-                    setModalSearch("");
-                    setSelectedBranch(branch);
-                  }}
-                  className="group flex flex-col justify-between text-left w-full bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-300 relative overflow-hidden"
-                >
-                  <div className="absolute top-0 left-0 w-1 h-full bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                return (
+                  <button
+                    key={branch.branch_id}
+                    onClick={() => {
+                      setModalSearch("");
+                      setSelectedBranch(branch);
+                    }}
+                    className="group relative flex flex-col justify-between text-left w-full bg-white rounded-xl p-3 border border-slate-200/80 shadow-sm hover:shadow-md hover:shadow-blue-100/30 hover:border-blue-200 transition-all duration-300 overflow-hidden"
+                  >
+                    {/* Hover glow */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-indigo-50/0 group-hover:from-blue-50/40 group-hover:to-indigo-50/15 transition-all duration-500 rounded-xl pointer-events-none" />
+                    {/* Left accent bar */}
+                    <div className="absolute top-2.5 bottom-2.5 left-0 w-0.5 bg-gradient-to-b from-blue-500 to-indigo-500 rounded-r-full opacity-0 group-hover:opacity-100 transition-all duration-300" />
 
-                  {/* Card Header */}
-                  <div className="w-full mb-4">
-                    <div className="flex justify-between items-start gap-3 mb-2">
-                      <h4 className="text-base font-bold text-gray-900 line-clamp-1 group-hover:text-blue-600 transition-colors">
-                        {branch.name}
-                      </h4>
-                      <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-500 text-[10px] font-bold border border-gray-200 uppercase tracking-wide">
-                        #{branch.branch_id}
-                      </span>
-                    </div>
-
-                    <div className="flex items-start gap-2 text-xs text-gray-500 min-h-8">
-                      <MapPin
-                        size={14}
-                        className="mt-0.5 text-gray-400 shrink-0"
-                      />
-                      <span className="line-clamp-2 leading-relaxed">
-                        {branch.address || "No address provided"}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Card Footer */}
-                  <div className="w-full pt-4 border-t border-gray-100 flex items-end justify-between">
-                    <div>
-                      <p className="text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-wider">
-                        Team Members
-                      </p>
-                      <div className="flex items-center gap-3">
-                        <AvatarPile
-                          items={avatars}
-                          names={names}
-                          size={8}
-                          max={3}
+                    {/* Card top */}
+                    <div className="relative mb-2">
+                      <div className="flex justify-between items-start gap-1.5 mb-1">
+                        <h4 className="text-[11px] font-bold text-slate-900 line-clamp-1 group-hover:text-blue-700 transition-colors duration-200 leading-tight">
+                          {branch.name}
+                        </h4>
+                        <span className="shrink-0 px-1 py-0.5 rounded bg-slate-100 text-slate-400 text-[8px] font-bold border border-slate-200 uppercase tracking-wide group-hover:bg-blue-50 group-hover:text-blue-400 group-hover:border-blue-100 transition-colors">
+                          #{branch.branch_id}
+                        </span>
+                      </div>
+                      <div className="flex items-start gap-1 text-[10px] text-slate-400 min-h-[1.5rem]">
+                        <MapPin
+                          size={9}
+                          className="mt-0.5 shrink-0 text-slate-300 group-hover:text-blue-400 transition-colors"
                         />
-                        {count === 0 && (
-                          <span className="text-xs text-gray-400 italic">
-                            No Staff
-                          </span>
-                        )}
+                        <span className="line-clamp-2 leading-relaxed">
+                          {branch.address || "No address on record"}
+                        </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg group-hover:bg-blue-100 transition-colors">
-                      <span>Details</span>
-                      <ArrowRight
-                        size={14}
-                        className="group-hover:translate-x-0.5 transition-transform"
-                      />
+                    {/* Card footer — shows active member count  ← CHANGED */}
+                    <div className="pt-2 border-t border-slate-100 group-hover:border-blue-100 transition-colors flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <AvatarPile
+                          items={avatars}
+                          names={names}
+                          size={5}
+                          max={3}
+                        />
+                        <span className="text-[9px] text-slate-400 font-medium">
+                          {count > 0 ? (
+                            <span className="text-emerald-600 font-semibold">
+                              {count}{" "}
+                              <span className="text-slate-400 font-medium">
+                                active {count === 1 ? "member" : "members"}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="italic text-slate-300">
+                              No active staff
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                      <div className="w-4 h-4 rounded bg-slate-100 group-hover:bg-blue-100 flex items-center justify-center transition-colors duration-200">
+                        <ArrowRight
+                          size={9}
+                          className="text-slate-400 group-hover:text-blue-600 group-hover:translate-x-px transition-all duration-200"
+                        />
+                      </div>
                     </div>
-                  </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* ── See More / See Less ── */}
+            {filteredBranches.length > CARDS_PER_PAGE && (
+              <div className="mt-3">
+                <div className="flex items-center gap-2 mb-2.5">
+                  <div className="flex-1 h-px bg-gradient-to-r from-transparent to-slate-200" />
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">
+                    {showAll
+                      ? `All ${filteredBranches.length} branches`
+                      : `${hiddenCount} more`}
+                  </span>
+                  <div className="flex-1 h-px bg-gradient-to-l from-transparent to-slate-200" />
+                </div>
+
+                <button
+                  onClick={() => setShowAll((p) => !p)}
+                  className="group w-full flex items-center justify-center gap-1.5 py-1.5 px-3 text-[11px] font-semibold text-slate-500 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-xl transition-all duration-200 shadow-sm"
+                >
+                  {showAll ? (
+                    <>
+                      <ChevronUp
+                        size={12}
+                        className="group-hover:-translate-y-0.5 transition-transform duration-200"
+                      />
+                      See Less
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown
+                        size={12}
+                        className="group-hover:translate-y-0.5 transition-transform duration-200"
+                      />
+                      See {hiddenCount} More{" "}
+                      {hiddenCount === 1 ? "Branch" : "Branches"}
+                    </>
+                  )}
                 </button>
-              );
-            })
-          )}
-        </div>
+              </div>
+            )}
+          </>
+        )}
       </div>
 
-      {/* --- Modal Overlay --- */}
+      {/* ══════════════════════════════════════
+          MODAL
+      ══════════════════════════════════════ */}
       {selectedBranch && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6"
           onClick={() => setSelectedBranch(null)}
         >
-          <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" />
+          <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-[6px]" />
 
-          {/* Modal Content */}
           <div
-            className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200"
+            className="relative w-full max-w-lg sm:max-w-xl bg-white rounded-2xl shadow-2xl shadow-slate-900/20 flex flex-col max-h-[88vh] overflow-hidden"
+            style={{
+              animation: "modalIn 0.22s cubic-bezier(0.34,1.56,0.64,1) both",
+            }}
             onClick={(e) => e.stopPropagation()}
           >
+            <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400" />
+
             {/* Modal Header */}
-            <div className="px-6 py-5 border-b border-gray-100 bg-white rounded-t-2xl z-10">
+            <div className="px-5 sm:px-6 pt-6 pb-4 border-b border-slate-100">
               <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900">
-                    {selectedBranch.name}
-                  </h2>
-                  <div className="flex items-center gap-1.5 text-sm text-gray-500 mt-1">
-                    <MapPin size={15} />
-                    <span>{selectedBranch.address || "Address not set"}</span>
+                <div className="flex items-start gap-3">
+                  <div className="p-2.5 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl shadow-md shadow-blue-200/60 shrink-0 mt-0.5">
+                    <Building2 className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
+                      {selectedBranch.name}
+                    </h2>
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-1">
+                      <MapPin size={11} className="text-slate-300 shrink-0" />
+                      <span className="line-clamp-1">
+                        {selectedBranch.address || "Address not set"}
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <button
                   onClick={() => setSelectedBranch(null)}
-                  className="p-2 bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-gray-600 rounded-full transition-colors"
+                  className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-600 transition-all duration-200 shrink-0 ml-2"
+                  aria-label="Close"
                 >
-                  <X size={20} />
+                  <X size={16} />
                 </button>
               </div>
 
-              {/* Modal Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              {/* Stat pills  ← CHANGED: uses UserCheck icon + "active employees" label */}
+              <div className="flex flex-wrap gap-2 mb-4">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <UserCheck size={11} />
+                  {branchEmployees.length} active{" "}
+                  {branchEmployees.length === 1 ? "employee" : "employees"}
+                </div>
+                {selectedBranch.branch_id && (
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                    <Building2 size={11} />
+                    Branch #{selectedBranch.branch_id}
+                  </div>
+                )}
+              </div>
+
+              {/* Modal search */}
+              <div className="relative group">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 group-focus-within:text-blue-500 transition-colors pointer-events-none" />
                 <input
                   type="text"
-                  placeholder="Search employee in this branch..."
+                  placeholder="Search by name, ID, or position..."
                   value={modalSearch}
                   onChange={(e) => setModalSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-gray-50 border-none rounded-lg text-sm focus:ring-2 focus:ring-blue-100 text-gray-700"
+                  className="w-full pl-9 pr-9 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 placeholder-slate-400 outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 focus:bg-white transition-all duration-200"
                 />
+                {modalSearch && (
+                  <button
+                    onClick={() => setModalSearch("")}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  >
+                    <X size={12} />
+                  </button>
+                )}
               </div>
             </div>
 
-            {/* Modal List */}
-            <div className="flex-1 overflow-y-auto p-2 custom-scrollbar">
-              <div className="px-2 py-2">
-                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 px-2">
-                  {filteredModalEmployees.length} Active Staff
-                </div>
+            {/* Employee List */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar">
+              {/* Sticky count bar  ← CHANGED: prefixed with "active" */}
+              <div className="sticky top-0 bg-white/90 backdrop-blur-sm px-5 sm:px-6 py-2 border-b border-slate-50 z-10">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  {filteredModalEmployees.length} active{" "}
+                  {filteredModalEmployees.length === 1
+                    ? "employee"
+                    : "employees"}
+                  {modalSearch && (
+                    <span className="ml-1.5 text-blue-500 normal-case font-semibold tracking-normal">
+                      for "{modalSearch}"
+                    </span>
+                  )}
+                </p>
+              </div>
 
+              <div className="px-3 sm:px-4 py-2 pb-3">
                 {filteredModalEmployees.length === 0 ? (
-                  <div className="py-12 text-center">
-                    <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <Users className="w-6 h-6 text-gray-300" />
+                  <div className="py-12 flex flex-col items-center gap-2 text-center">
+                    <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center shadow-inner">
+                      <Users className="w-5 h-5 text-slate-300" />
                     </div>
-                    <p className="text-sm text-gray-500">No employees found.</p>
+                    <p className="text-sm font-semibold text-slate-500 mt-1">
+                      No active employees found
+                    </p>
+                    <p className="text-xs text-slate-400">
+                      {modalSearch
+                        ? "Try a different search term."
+                        : "This branch has no active staff assigned."}
+                    </p>
+                    {modalSearch && (
+                      <button
+                        onClick={() => setModalSearch("")}
+                        className="mt-1 text-xs text-blue-600 font-semibold hover:text-blue-700 transition-colors"
+                      >
+                        Clear search
+                      </button>
+                    )}
                   </div>
                 ) : (
-                  <div className="space-y-1">
-                    {filteredModalEmployees.map((emp) => (
+                  <div className="space-y-0.5 mt-1">
+                    {filteredModalEmployees.map((emp, idx) => (
                       <div
                         key={emp.employee_id}
-                        className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150 group cursor-default"
                       >
-                        {/* Avatar */}
+                        {/* Avatar with active status dot */}
                         <div className="relative shrink-0">
                           {emp.image ? (
                             <img
                               src={resolveImage(emp.image)}
                               alt=""
-                              className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                              className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm"
                               onError={(e) => {
                                 e.currentTarget.onerror = null;
                                 e.currentTarget.src =
@@ -399,29 +614,46 @@ export default function BranchDirectory() {
                               }}
                             />
                           ) : (
-                            <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-100 to-blue-200 text-blue-600 flex items-center justify-center text-xs font-bold border border-blue-100">
+                            <div
+                              className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white border-2 border-white shadow-sm"
+                              style={{
+                                background: `hsl(${(idx * 47 + 210) % 360}, 60%, 55%)`,
+                              }}
+                            >
                               {`${(emp.first_name?.[0] || "").toUpperCase()}${(emp.last_name?.[0] || "").toUpperCase()}`}
                             </div>
                           )}
-                          <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></div>
+                          {/*
+                            ← The green dot is now semantically correct:
+                            only active employees are in this list, so the
+                            dot truthfully means "active / online".
+                          */}
+                          <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-white rounded-full shadow-sm" />
                         </div>
 
-                        {/* Details */}
+                        {/* Employee info */}
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <h4 className="text-sm font-semibold text-gray-900 truncate">
-                              {emp.first_name} {emp.middle_name || ""}{" "}
+                          <div className="flex items-center justify-between gap-2">
+                            <h4 className="text-sm font-semibold text-slate-800 truncate">
+                              {emp.first_name}{" "}
+                              {emp.middle_name ? `${emp.middle_name[0]}.` : ""}{" "}
                               {emp.last_name}
                             </h4>
-                            <span className="text-[10px] font-mono text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="text-[10px] font-mono text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                               {emp.employee_id}
                             </span>
                           </div>
-                          <p className="text-xs text-blue-600 font-medium truncate mb-0.5">
-                            {emp.position_name || "No Position"}
-                          </p>
+
+                          {/* Position + Active badge  ← CHANGED */}
+                          <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                            <p className="text-xs text-blue-600 font-medium truncate">
+                              {emp.position_name || "No Position"}
+                            </p>
+                            <ActiveBadge />
+                          </div>
+
                           {emp.email && (
-                            <p className="text-[11px] text-gray-400 truncate">
+                            <p className="text-[11px] text-slate-400 truncate mt-0.5">
                               {emp.email}
                             </p>
                           )}
@@ -434,14 +666,31 @@ export default function BranchDirectory() {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 bg-gray-50 border-t border-gray-100 rounded-b-2xl text-right">
-              <span className="text-xs text-gray-400 mr-2">
-                Press ESC to close
-              </span>
+            <div className="px-5 sm:px-6 py-3 bg-slate-50/80 border-t border-slate-100 rounded-b-2xl flex items-center justify-between">
+              <p className="text-[11px] text-slate-400">
+                Press{" "}
+                <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white border border-slate-200 rounded-md text-slate-500 shadow-sm">
+                  ESC
+                </kbd>{" "}
+                to close
+              </p>
+              <button
+                onClick={() => setSelectedBranch(null)}
+                className="text-xs font-semibold text-slate-500 hover:text-slate-700 transition-colors"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes modalIn {
+          from { opacity: 0; transform: scale(0.95) translateY(8px); }
+          to   { opacity: 1; transform: scale(1)    translateY(0);   }
+        }
+      `}</style>
     </div>
   );
 }

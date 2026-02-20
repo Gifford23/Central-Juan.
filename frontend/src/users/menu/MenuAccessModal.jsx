@@ -19,8 +19,7 @@ import {
   List,
   Home,
   UsersRound,
-  Smartphone
-  
+  Smartphone,
 } from "lucide-react";
 
 const menuConfig = {
@@ -53,7 +52,7 @@ export default function MenuAccessModal({ user, onClose }) {
     const fetchAccess = async () => {
       try {
         const res = await axios.get(
-          `${BASE_URL}/users/menu/getMenuAccess.php?username=${user.username}`
+          `${BASE_URL}/users/menu/getMenuAccess.php?username=${user.username}`,
         );
         const fetched = res.data || {};
 
@@ -88,7 +87,7 @@ export default function MenuAccessModal({ user, onClose }) {
 
       const res = await axios.post(
         `${BASE_URL}/users/menu/update_menu_access.php`,
-        payload
+        payload,
       );
 
       if (res.data.success) {
